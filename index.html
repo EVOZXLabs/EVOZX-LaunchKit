@@ -8,7 +8,7 @@
 <meta name="viewport"
 content="width=device-width,initial-scale=1">
 
-<title>EVOZX Launch Kit v0.4</title>
+<title>EVOZX Launch Kit v0.5</title>
 
 <link rel="stylesheet"
 href="style.css">
@@ -19,9 +19,9 @@ href="style.css">
 
 <div class="container">
 
-<h1>EVOZX Launch Kit</h1>
+<h1>EVOZX Launch Kit v0.5</h1>
 
-<p>Generate complete launch assets</p>
+<p>Launch Assets + Contract Wizard</p>
 
 <input id="project"
 placeholder="Project Name">
@@ -35,51 +35,109 @@ placeholder="Symbol">
 <input id="supply"
 placeholder="Supply">
 
-<textarea
-id="description"
-placeholder="Description"></textarea>
+<textarea id="description"
+placeholder="Project Description"></textarea>
 
-<button onclick="generateDocs()">
-Generate
+
+<select id="contractType">
+
+<option value="basic">
+
+Basic Token
+
+</option>
+
+<option value="mintable">
+
+Mintable Token
+
+</option>
+
+<option value="burnable">
+
+Burnable Token
+
+</option>
+
+</select>
+
+
+<button onclick="generateAll()">
+
+Generate Everything
+
 </button>
 
-<h2>Landing Page HTML</h2>
 
-<button onclick="copyText('landinghtml')">
-Copy
-</button>
+<section>
 
-<button onclick=
-"downloadText(
-'landinghtml',
-'index.html'
-)">
-Export
-</button>
+<h2>Dashboard Preview</h2>
 
-<textarea id="landinghtml"></textarea>
+<div id="dashboard">
+
+<div class="card">
+
+<span>Supply</span>
+
+<h3 id="dSupply">-</h3>
+
+</div>
+
+<div class="card">
+
+<span>Symbol</span>
+
+<h3 id="dSymbol">-</h3>
+
+</div>
+
+<div class="card">
+
+<span>Type</span>
+
+<h3 id="dType">-</h3>
+
+</div>
+
+</div>
+
+</section>
 
 
-<h2>Landing Page CSS</h2>
+<section>
 
-<button onclick="copyText('landingcss')">
-Copy
-</button>
+<h2>Smart Contract</h2>
 
-<button onclick=
-"downloadText(
-'landingcss',
-'style.css'
-)">
-Export
-</button>
+<textarea id="contract"></textarea>
 
-<textarea id="landingcss"></textarea>
+</section>
 
 
-<h2>Preview</h2>
+<section>
 
-<iframe id="preview"></iframe>
+<h2>Website HTML</h2>
+
+<textarea id="website"></textarea>
+
+</section>
+
+
+<section>
+
+<h2>Logo Prompt</h2>
+
+<textarea id="logo"></textarea>
+
+</section>
+
+
+<section>
+
+<h2>Metadata JSON</h2>
+
+<textarea id="metadata"></textarea>
+
+</section>
 
 </div>
 
