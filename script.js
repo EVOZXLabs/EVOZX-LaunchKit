@@ -1,4 +1,4 @@
-function generateDocs(){
+function generateAll(){
 
 const project=
 document.getElementById(
@@ -25,226 +25,159 @@ document.getElementById(
 "description"
 ).value;
 
+const type=
+document.getElementById(
+"contractType"
+).value;
 
-const html=
 
-`<!DOCTYPE html>
+document.getElementById(
+"dSupply"
+).innerText=supply;
 
-<html>
+document.getElementById(
+"dSymbol"
+).innerText=symbol;
 
-<head>
+document.getElementById(
+"dType"
+).innerText=type;
 
-<title>${project}</title>
 
-<link rel="stylesheet"
-href="style.css">
 
-</head>
+let extras="";
 
-<body>
+if(type==="mintable"){
 
-<section class="hero">
+extras=
+`
+function mint(
+uint amount
+) public{
 
+totalSupply+=amount;
+
+}
+`;
+
+}
+
+if(type==="burnable"){
+
+extras=
+`
+function burn(
+uint amount
+) public{
+
+totalSupply-=amount;
+
+}
+`;
+
+}
+
+
+const contract=
+
+`
+pragma solidity ^0.8.20;
+
+contract ${symbol}{
+
+string public name=
+"${token}";
+
+string public symbol=
+"${symbol}";
+
+uint public totalSupply=
+${supply};
+
+${extras}
+
+}
+`;
+
+
+
+const website=
+
+`
 <h1>${project}</h1>
 
-<p>${description}</p>
+<p>
+
+${description}
+
+</p>
+
+<h2>
+
+Token:
+
+${token}
+
+</h2>
 
 <button>
 
 BUY ${symbol}
 
 </button>
-
-</section>
-
-
-<section>
-
-<h2>About</h2>
-
-<p>
-
-${project}
-built on EVOZ Mainnet
-
-</p>
-
-</section>
-
-
-<section>
-
-<h2>Token Info</h2>
-
-<p>
-
-Token:
-
-${token}
-
-</p>
-
-<p>
-
-Supply:
-
-${supply}
-
-</p>
-
-</section>
-
-
-<section>
-
-<h2>Utility</h2>
-
-<ul>
-
-<li>Community</li>
-
-<li>Payments</li>
-
-<li>Ecosystem</li>
-
-</ul>
-
-</section>
-
-
-<section>
-
-<h2>Roadmap</h2>
-
-<p>
-
-Launch
-
-Growth
-
-Expansion
-
-</p>
-
-</section>
-
-
-<section>
-
-<h2>FAQ</h2>
-
-<p>
-
-What is ${project}?
-
-Blockchain project.
-
-</p>
-
-</section>
-
-</body>
-
-</html>
 `;
 
 
-const css=
+const logo=
 
 `
-body{
+Create futuristic logo for
 
-font-family:Arial;
+${project}
 
-margin:0;
+crypto project
 
-background:#0a1022;
+symbol ${symbol}
 
-color:white;
+dark theme
 
-}
+professional branding
 
-.hero{
-
-padding:120px 20px;
-
-text-align:center;
-
-}
-
-section{
-
-padding:50px 20px;
-
-max-width:900px;
-
-margin:auto;
-
-}
-
-button{
-
-padding:15px 30px;
-
-font-size:18px;
-
-}
-
+vector style
 `;
 
-document.getElementById(
-"landinghtml"
-).value=html;
 
-document.getElementById(
-"landingcss"
-).value=css;
+const metadata=
 
-document.getElementById(
-"preview"
-).srcdoc=
+`
+{
 
-`<style>${css}</style>${html}`;
+"name":"${token}",
 
-}
+"symbol":"${symbol}",
 
+"supply":"${supply}",
 
-function copyText(id){
-
-const el=
-document.getElementById(id);
-
-el.select();
-
-document.execCommand(
-"copy"
-);
+"network":"EVOZ"
 
 }
+`;
 
 
-function downloadText(id,file){
+document.getElementById(
+"contract"
+).value=contract;
 
-const text=
-document.getElementById(id).value;
+document.getElementById(
+"website"
+).value=website;
 
-const blob=
-new Blob(
-[text]
-);
+document.getElementById(
+"logo"
+).value=logo;
 
-const a=
-document.createElement(
-"a"
-);
-
-a.href=
-URL.createObjectURL(
-blob
-);
-
-a.download=file;
-
-a.click();
+document.getElementById(
+"metadata"
+).value=metadata;
 
 }
