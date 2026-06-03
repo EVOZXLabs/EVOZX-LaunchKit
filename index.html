@@ -8,7 +8,7 @@
 <meta name="viewport"
 content="width=device-width,initial-scale=1">
 
-<title>EVOZX Launch Kit v0.3</title>
+<title>EVOZX Launch Kit v0.4</title>
 
 <link rel="stylesheet"
 href="style.css">
@@ -21,7 +21,7 @@ href="style.css">
 
 <h1>EVOZX Launch Kit</h1>
 
-<p>Create Your Token Project on EVOZ Mainnet</p>
+<p>Generate complete launch assets</p>
 
 <input id="project"
 placeholder="Project Name">
@@ -30,123 +30,56 @@ placeholder="Project Name">
 placeholder="Token Name">
 
 <input id="symbol"
-placeholder="Token Symbol">
+placeholder="Symbol">
 
 <input id="supply"
-placeholder="Max Supply">
+placeholder="Supply">
 
-<textarea id="description"
-placeholder="Project Description"></textarea>
+<textarea
+id="description"
+placeholder="Description"></textarea>
 
 <button onclick="generateDocs()">
 Generate
 </button>
 
-<section>
+<h2>Landing Page HTML</h2>
 
-<h2>README</h2>
-
-<button onclick="copyText('readme')">
+<button onclick="copyText('landinghtml')">
 Copy
 </button>
 
-<button onclick="downloadText('readme','README.txt')">
+<button onclick=
+"downloadText(
+'landinghtml',
+'index.html'
+)">
 Export
 </button>
 
-<textarea id="readme"></textarea>
-
-</section>
+<textarea id="landinghtml"></textarea>
 
 
-<section>
+<h2>Landing Page CSS</h2>
 
-<h2>WHITEPAPER</h2>
-
-<button onclick="copyText('whitepaper')">
+<button onclick="copyText('landingcss')">
 Copy
 </button>
 
-<button onclick="downloadText('whitepaper','WHITEPAPER.txt')">
+<button onclick=
+"downloadText(
+'landingcss',
+'style.css'
+)">
 Export
 </button>
 
-<textarea id="whitepaper"></textarea>
-
-</section>
+<textarea id="landingcss"></textarea>
 
 
-<section>
+<h2>Preview</h2>
 
-<h2>ROADMAP</h2>
-
-<button onclick="copyText('roadmap')">
-Copy
-</button>
-
-<button onclick="downloadText('roadmap','ROADMAP.txt')">
-Export
-</button>
-
-<textarea id="roadmap"></textarea>
-
-</section>
-
-
-<section>
-
-<h2>TOKENOMICS</h2>
-
-<button onclick="copyText('tokenomics')">
-Copy
-</button>
-
-<button onclick="downloadText('tokenomics','TOKENOMICS.txt')">
-Export
-</button>
-
-<textarea id="tokenomics"></textarea>
-
-</section>
-
-
-<section>
-
-<h2>SMART CONTRACT</h2>
-
-<button onclick="copyText('contract')">
-Copy
-</button>
-
-<textarea id="contract"></textarea>
-
-</section>
-
-
-<section>
-
-<h2>LOGO PROMPT</h2>
-
-<button onclick="copyText('logo')">
-Copy
-</button>
-
-<textarea id="logo"></textarea>
-
-</section>
-
-
-<section>
-
-<h2>SOCIAL BIO</h2>
-
-<button onclick="copyText('bio')">
-Copy
-</button>
-
-<textarea id="bio"></textarea>
-
-</section>
+<iframe id="preview"></iframe>
 
 </div>
 
