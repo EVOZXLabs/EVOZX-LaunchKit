@@ -1,0 +1,27 @@
+body{
+background:#0d1117;
+color:white;
+font-family:Arial;
+padding:20px;
+}
+
+.container{
+max-width:800px;
+margin:auto;
+}
+
+input,
+textarea{
+width:100%;
+padding:12px;
+margin:10px 0;
+}
+
+button{
+padding:12px 20px;
+cursor:pointer;
+}
+
+#output{
+height:300px;
+}
