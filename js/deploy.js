@@ -4,25 +4,28 @@ async function deployToken() {
 
         if (!window.ethereum) {
 
-            alert("EVM Wallet not detected");
+            alert("Wallet tidak terdeteksi");
             return;
 
         }
 
         const name =
-            document.getElementById(
-                "tokenName"
-            ).value.trim();
+            document
+            .getElementById("tokenName")
+            .value
+            .trim();
 
         const symbol =
-            document.getElementById(
-                "tokenSymbol"
-            ).value.trim();
+            document
+            .getElementById("tokenSymbol")
+            .value
+            .trim();
 
         const supply =
-            document.getElementById(
-                "tokenSupply"
-            ).value.trim();
+            document
+            .getElementById("tokenSupply")
+            .value
+            .trim();
 
         if (
             !name ||
@@ -31,7 +34,7 @@ async function deployToken() {
         ) {
 
             alert(
-                "Please fill all fields"
+                "Isi semua field terlebih dahulu"
             );
 
             return;
@@ -50,6 +53,9 @@ async function deployToken() {
 
         const signer =
             provider.getSigner();
+
+        const creator =
+            await signer.getAddress();
 
         const factory =
             new ethers.Contract(
@@ -78,13 +84,9 @@ async function deployToken() {
         ).innerText =
             "Token deployed successfully";
 
-        let tokenAddress =
-            null;
+        let tokenAddress = null;
 
-        for (
-            const log
-            of receipt.logs
-        ) {
+        for (const log of receipt.logs) {
 
             try {
 
@@ -114,11 +116,23 @@ async function deployToken() {
             document.getElementById(
                 "tokenResult"
             ).innerHTML =
-                "Deployment succeeded but token address not found.";
+                "Token address not found.";
 
             return;
 
         }
+
+        const verificationData = {
+
+            tokenAddress,
+            txHash:
+                receipt.transactionHash,
+            creator,
+            name,
+            symbol,
+            supply
+
+        };
 
         document.getElementById(
             "tokenResult"
@@ -127,15 +141,37 @@ async function deployToken() {
             `
             <b>Token Address</b><br>
             ${tokenAddress}
+
+            <br><br>
+
+            <b>TX Hash</b><br>
+            ${receipt.transactionHash}
+
+            <br><br>
+
+            <button onclick="copyTokenAddress('${tokenAddress}')">
+                Copy Address
+            </button>
+
             <br><br>
 
             <a
                 href="${CONFIG.EXPLORER_URL}/address/${tokenAddress}"
                 target="_blank">
 
-                View on Explorer
+                View Explorer
 
             </a>
+
+            <br><br>
+
+            <button onclick='downloadVerificationPackage(${JSON.stringify(
+                verificationData
+            )})'>
+
+                Download Verification Package
+
+            </button>
             `;
 
     } catch (error) {
@@ -148,5 +184,124 @@ async function deployToken() {
             error.message;
 
     }
+
+}
+
+function copyTokenAddress(address) {
+
+    navigator.clipboard.writeText(
+        address
+    );
+
+    alert(
+        "Address copied"
+    );
+
+}
+
+async function downloadVerificationPackage(data) {
+
+    const zip =
+        new JSZip();
+
+    const verifyInfo =
+
+`TOKEN ADDRESS
+${data.tokenAddress}
+
+TX HASH
+${data.txHash}
+
+CREATOR
+${data.creator}
+
+NAME
+${data.name}
+
+SYMBOL
+${data.symbol}
+
+SUPPLY
+${data.supply}
+
+COMPILER
+0.8.24
+
+OPTIMIZER
+Enabled
+
+RUNS
+200
+
+EVM VERSION
+Paris
+`;
+
+    const compilerSettings = {
+
+        compilerVersion:
+            "0.8.24",
+
+        optimizer: {
+
+            enabled: true,
+            runs: 200
+
+        },
+
+        evmVersion:
+            "paris"
+
+    };
+
+    const constructorArgs =
+
+`name_     = ${data.name}
+symbol_   = ${data.symbol}
+supply_   = ${data.supply}
+creator_  = ${data.creator}`;
+
+    zip.file(
+        "verify-info.txt",
+        verifyInfo
+    );
+
+    zip.file(
+        "compiler-settings.json",
+        JSON.stringify(
+            compilerSettings,
+            null,
+            2
+        )
+    );
+
+    zip.file(
+        "constructor-arguments.txt",
+        constructorArgs
+    );
+
+    const blob =
+        await zip.generateAsync({
+            type: "blob"
+        });
+
+    const link =
+        document.createElement("a");
+
+    link.href =
+        URL.createObjectURL(blob);
+
+    link.download =
+        `${data.symbol}-Verification.zip`;
+
+    document.body.appendChild(
+        link
+    );
+
+    link.click();
+
+    document.body.removeChild(
+        link
+    );
 
 }
