@@ -138,11 +138,16 @@ async function deployToken() {
         const verificationData = {
 
             tokenAddress,
+
             txHash:
                 receipt.transactionHash,
+
             creator,
+
             name,
+
             symbol,
+
             supply
 
         };
@@ -151,45 +156,97 @@ async function deployToken() {
             "tokenResult"
         ).innerHTML =
 
-            `
-            <b>Token Address</b>
-            <br>
-            ${tokenAddress}
+        `
+        <div class="token-card">
 
-            <br><br>
+            <div class="token-symbol">
 
-            <b>TX Hash</b>
-            <br>
-            ${receipt.transactionHash}
+                ${symbol}
 
-            <br><br>
+            </div>
 
-            <button onclick="copyTokenAddress('${tokenAddress}')">
-                Copy Address
-            </button>
+            <div class="token-name">
 
-            <br><br>
+                ${name}
 
-            <a href="${CONFIG.EXPLORER_URL}/address/${tokenAddress}" target="_blank">
-                View Explorer
-            </a>
+            </div>
 
-            <br><br>
+            <div class="token-address">
 
-            <button onclick="addTokenToWallet('${tokenAddress}','${symbol}')">
-                Add Token To Wallet
-            </button>
+                ${tokenAddress.substring(
+                    0,
+                    6
+                )}
+                ...
+                ${tokenAddress.substring(
+                    tokenAddress.length - 4
+                )}
 
-            <br><br>
+            </div>
 
-            <button onclick='downloadVerificationPackage(${JSON.stringify(
-                verificationData
-            )})'>
-                Download Verification Package
-            </button>
-            `;
+            <div class="token-actions">
+
+                <button onclick="copyTokenAddress('${tokenAddress}')">
+
+                    Copy Address
+
+                </button>
+
+                <br><br>
+
+                <a
+                    href="${CONFIG.EXPLORER_URL}/address/${tokenAddress}"
+                    target="_blank">
+
+                    Explorer
+
+                </a>
+
+            </div>
+
+            <details>
+
+                <summary>
+                    Details
+                </summary>
+
+                <br>
+
+                Full Address:
+                <br>
+                ${tokenAddress}
+
+                <br><br>
+
+                TX Hash:
+                <br>
+                ${receipt.transactionHash}
+
+            </details>
+
+        </div>
+
+        <br>
+
+        <button onclick="addTokenToWallet('${tokenAddress}','${symbol}')">
+
+            Add Token To Wallet
+
+        </button>
+
+        <br><br>
+
+        <button onclick='downloadVerificationPackage(${JSON.stringify(
+            verificationData
+        )})'>
+
+            Download Verification Package
+
+        </button>
+        `;
 
         await loadFactoryStats();
+
         await loadMyTokens();
 
     } catch (error) {
@@ -307,8 +364,19 @@ async function loadFactoryStats() {
         stats.innerHTML =
 
             `
-            <b>Total Tokens Created:</b>
-            ${total.toString()}
+            <div style="
+                text-align:center;
+                font-size:26px;
+                font-weight:bold;
+            ">
+                ${total.toString()}
+            </div>
+
+            <div style="
+                text-align:center;
+            ">
+                Total Tokens Created
+            </div>
             `;
 
         let html = "";
@@ -341,15 +409,47 @@ async function loadFactoryStats() {
 
             html +=
 
-                `
-                <div>
+            `
+            <div class="token-card">
 
-                    <b>${token.name}</b>
-                    (${token.symbol})
+                <div class="token-symbol">
+                    ${token.symbol}
+                </div>
 
-                    <br>
+                <div class="token-name">
+                    ${token.name}
+                </div>
 
-                    ${token.token}
+                <div class="token-address">
+
+                    ${token.token.substring(
+                        0,
+                        6
+                    )}
+                    ...
+                    ${token.token.substring(
+                        token.token.length - 4
+                    )}
+
+                </div>
+
+                <div class="token-actions">
+
+                    <a
+                        href="${CONFIG.EXPLORER_URL}/address/${token.token}"
+                        target="_blank">
+
+                        Explorer
+
+                    </a>
+
+                </div>
+
+                <details>
+
+                    <summary>
+                        Details
+                    </summary>
 
                     <br>
 
@@ -359,20 +459,20 @@ async function loadFactoryStats() {
                         18
                     )}
 
-                    <br>
+                    <br><br>
 
+                    Creator:
+                    ${token.creator}
+
+                    <br><br>
+
+                    Created:
                     ${createdDate}
 
-                    <br>
+                </details>
 
-                    <a href="${CONFIG.EXPLORER_URL}/address/${token.token}" target="_blank">
-                        Explorer
-                    </a>
-
-                </div>
-
-                <hr>
-                `;
+            </div>
+            `;
 
         }
 
@@ -453,28 +553,79 @@ async function loadMyTokens() {
 
             }
 
+            const createdDate =
+                new Date(
+                    Number(
+                        token.createdAt
+                    ) * 1000
+                ).toLocaleString();
+
             html +=
 
-                `
-                <div>
+            `
+            <div class="token-card">
 
-                    <b>${token.name}</b>
-                    (${token.symbol})
+                <div class="token-symbol">
+                    ${token.symbol}
+                </div>
 
-                    <br>
+                <div class="token-name">
+                    ${token.name}
+                </div>
 
-                    ${token.token}
+                <div class="token-address">
 
-                    <br>
+                    ${token.token.substring(
+                        0,
+                        6
+                    )}
+                    ...
+                    ${token.token.substring(
+                        token.token.length - 4
+                    )}
 
-                    <a href="${CONFIG.EXPLORER_URL}/address/${token.token}" target="_blank">
+                </div>
+
+                <div class="token-actions">
+
+                    <a
+                        href="${CONFIG.EXPLORER_URL}/address/${token.token}"
+                        target="_blank">
+
                         Explorer
+
                     </a>
 
                 </div>
 
-                <hr>
-                `;
+                <details>
+
+                    <summary>
+                        Details
+                    </summary>
+
+                    <br>
+
+                    Supply:
+                    ${ethers.utils.formatUnits(
+                        token.supply,
+                        18
+                    )}
+
+                    <br><br>
+
+                    Created:
+                    ${createdDate}
+
+                    <br><br>
+
+                    Creator:
+                    ${token.creator}
+
+                </details>
+
+            </div>
+            `;
 
         }
 
