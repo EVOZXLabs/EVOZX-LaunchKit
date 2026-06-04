@@ -7,7 +7,7 @@ async function connectWallet() {
     if (!window.ethereum) {
 
         alert(
-            "Wallet tidak terdeteksi.\n\nBuka website ini melalui browser wallet seperti TokenPocket, OKX Wallet, Bitget Wallet, Rabby atau MetaMask."
+            "Wallet EVM tidak terdeteksi.\n\nBuka website ini melalui browser wallet seperti TokenPocket, OKX Wallet, Bitget Wallet, Rabby atau MetaMask."
         );
 
         return;
@@ -17,6 +17,28 @@ async function connectWallet() {
     try {
 
         await switchToEvoz();
+
+        const currentChain =
+            await window.ethereum.request({
+                method: "eth_chainId"
+            });
+
+        const targetChain =
+            "0x" +
+            CONFIG.CHAIN_ID.toString(16);
+
+        if (
+            currentChain.toLowerCase() !==
+            targetChain.toLowerCase()
+        ) {
+
+            alert(
+                "Jaringan belum berpindah ke EVOZ Mainnet.\n\nSilakan pindah manual ke EVOZ Mainnet lalu klik Connect Wallet lagi."
+            );
+
+            return;
+
+        }
 
         provider =
             new ethers.providers.Web3Provider(
@@ -28,7 +50,8 @@ async function connectWallet() {
             []
         );
 
-        signer = provider.getSigner();
+        signer =
+            provider.getSigner();
 
         currentAccount =
             await signer.getAddress();
@@ -77,51 +100,55 @@ async function switchToEvoz() {
 
         if (error.code === 4902) {
 
-            await window.ethereum.request({
+            try {
 
-                method:
-                    "wallet_addEthereumChain",
+                await window.ethereum.request({
 
-                params: [
+                    method:
+                        "wallet_addEthereumChain",
 
-                    {
+                    params: [
 
-                        chainId:
-                            chainHex,
+                        {
 
-                        chainName:
-                            CONFIG.CHAIN_NAME,
+                            chainId:
+                                chainHex,
 
-                        nativeCurrency: {
+                            chainName:
+                                CONFIG.CHAIN_NAME,
 
-                            name:
-                                CONFIG.CURRENCY_SYMBOL,
+                            nativeCurrency: {
 
-                            symbol:
-                                CONFIG.CURRENCY_SYMBOL,
+                                name:
+                                    CONFIG.CURRENCY_SYMBOL,
 
-                            decimals:
-                                18
+                                symbol:
+                                    CONFIG.CURRENCY_SYMBOL,
 
-                        },
+                                decimals:
+                                    18
 
-                        rpcUrls: [
-                            CONFIG.RPC_URL
-                        ],
+                            },
 
-                        blockExplorerUrls: [
-                            CONFIG.EXPLORER_URL
-                        ]
+                            rpcUrls: [
+                                CONFIG.RPC_URL
+                            ],
 
-                    }
+                            blockExplorerUrls: [
+                                CONFIG.EXPLORER_URL
+                            ]
 
-                ]
+                        }
 
-            });
+                    ]
 
-        } else {
+                });
 
-            throw error;
+            } catch (addError) {
+
+                console.error(addError);
+
+            }
 
         }
 
@@ -135,23 +162,31 @@ async function checkConnection() {
         return;
     }
 
-    provider =
-        new ethers.providers.Web3Provider(
-            window.ethereum
-        );
+    try {
 
-    const accounts =
-        await provider.listAccounts();
+        provider =
+            new ethers.providers.Web3Provider(
+                window.ethereum
+            );
 
-    if (accounts.length > 0) {
+        const accounts =
+            await provider.listAccounts();
 
-        currentAccount =
-            accounts[0];
+        if (accounts.length > 0) {
 
-        document.getElementById(
-            "walletAddress"
-        ).innerText =
-            currentAccount;
+            currentAccount =
+                accounts[0];
+
+            document.getElementById(
+                "walletAddress"
+            ).innerText =
+                currentAccount;
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
 
     }
 
