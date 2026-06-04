@@ -4,48 +4,29 @@ async function deployToken() {
 
         if (!window.ethereum) {
 
-            alert(
-                "Wallet tidak terdeteksi"
-            );
-
+            alert("Wallet tidak terdeteksi");
             return;
 
         }
 
         const name =
-            document
-            .getElementById(
-                "tokenName"
-            )
+            document.getElementById("tokenName")
             .value
             .trim();
 
         const symbol =
-            document
-            .getElementById(
-                "tokenSymbol"
-            )
+            document.getElementById("tokenSymbol")
             .value
             .trim();
 
         const supply =
-            document
-            .getElementById(
-                "tokenSupply"
-            )
+            document.getElementById("tokenSupply")
             .value
             .trim();
 
-        if (
-            !name ||
-            !symbol ||
-            !supply
-        ) {
+        if (!name || !symbol || !supply) {
 
-            alert(
-                "Isi semua field terlebih dahulu"
-            );
-
+            alert("Isi semua field terlebih dahulu");
             return;
 
         }
@@ -91,10 +72,7 @@ async function deployToken() {
         let tokenAddress =
             null;
 
-        for (
-            const log
-            of receipt.logs
-        ) {
+        for (const log of receipt.logs) {
 
             try {
 
@@ -130,7 +108,7 @@ async function deployToken() {
 
         }
 
-        saveDeployment({
+        const deployment = {
 
             tokenAddress,
             txHash:
@@ -138,9 +116,19 @@ async function deployToken() {
             creator,
             name,
             symbol,
-            supply
+            supply,
+            timestamp:
+                Date.now()
 
-        });
+        };
+
+        saveDeployment(
+            deployment
+        );
+
+        renderDeployments();
+        loadMyTokens();
+        loadFactoryStats();
 
         document.getElementById(
             "deployStatus"
@@ -177,42 +165,27 @@ async function deployToken() {
             <br><br>
 
             <button onclick="copyTokenAddress('${tokenAddress}')">
-
                 Copy Address
-
             </button>
 
             <br><br>
 
-            <a
-                href="${CONFIG.EXPLORER_URL}/address/${tokenAddress}"
-                target="_blank">
-
+            <a href="${CONFIG.EXPLORER_URL}/address/${tokenAddress}" target="_blank">
                 View Explorer
-
             </a>
 
             <br><br>
 
-            <button onclick="addTokenToWallet(
-                '${tokenAddress}',
-                '${symbol}'
-            )">
-
+            <button onclick="addTokenToWallet('${tokenAddress}','${symbol}')">
                 Add Token To Wallet
-
             </button>
 
             <br><br>
 
-            <button onclick='downloadVerificationPackage(
-                ${JSON.stringify(
-                    verificationData
-                )}
-            )'>
-
+            <button onclick='downloadVerificationPackage(${JSON.stringify(
+                verificationData
+            )})'>
                 Download Verification Package
-
             </button>
             `;
 
@@ -237,9 +210,7 @@ function copyTokenAddress(
         address
     );
 
-    alert(
-        "Address copied"
-    );
+    alert("Address copied");
 
 }
 
@@ -282,9 +253,7 @@ async function addTokenToWallet(
 
     } catch (error) {
 
-        console.error(
-            error
-        );
+        console.error(error);
 
     }
 
@@ -296,11 +265,9 @@ function saveDeployment(
 
     let deployments =
         JSON.parse(
-
             localStorage.getItem(
                 "evozxDeployments"
             )
-
         ) || [];
 
     deployments.unshift(
@@ -308,14 +275,179 @@ function saveDeployment(
     );
 
     localStorage.setItem(
-
         "evozxDeployments",
-
         JSON.stringify(
             deployments
         )
-
     );
+
+}
+
+function getDeployments() {
+
+    return JSON.parse(
+        localStorage.getItem(
+            "evozxDeployments"
+        )
+    ) || [];
+
+}
+
+function renderDeployments() {
+
+    const deployments =
+        getDeployments();
+
+    const container =
+        document.getElementById(
+            "recentDeployments"
+        );
+
+    if (!container)
+        return;
+
+    if (!deployments.length) {
+
+        container.innerHTML =
+            "No deployments yet";
+
+        return;
+
+    }
+
+    container.innerHTML =
+        deployments.map(
+            token => `
+            <div>
+
+                <b>${token.name}</b>
+                (${token.symbol})
+
+                <br>
+
+                ${token.tokenAddress}
+
+                <br>
+
+                <a href="${CONFIG.EXPLORER_URL}/address/${token.tokenAddress}" target="_blank">
+                    Explorer
+                </a>
+
+            </div>
+
+            <hr>
+            `
+        ).join("");
+
+}
+
+async function loadFactoryStats() {
+
+    const stats =
+        document.getElementById(
+            "factoryStats"
+        );
+
+    if (!stats)
+        return;
+
+    try {
+
+        const provider =
+            new ethers.providers.JsonRpcProvider(
+                CONFIG.RPC_URL
+            );
+
+        const factory =
+            new ethers.Contract(
+                CONFIG.FACTORY_ADDRESS,
+                FACTORY_ABI,
+                provider
+            );
+
+        const total =
+            await factory.totalTokens();
+
+        stats.innerHTML =
+            `
+            Total Tokens Created:
+            <b>${total.toString()}</b>
+            `;
+
+    } catch (error) {
+
+        console.error(error);
+
+        stats.innerHTML =
+            "Unable to load stats";
+
+    }
+
+}
+
+function loadMyTokens() {
+
+    const container =
+        document.getElementById(
+            "myTokens"
+        );
+
+    if (!container)
+        return;
+
+    if (!currentAccount) {
+
+        container.innerHTML =
+            "Connect wallet first";
+
+        return;
+
+    }
+
+    const deployments =
+        getDeployments();
+
+    const mine =
+        deployments.filter(
+            d =>
+                d.creator
+                .toLowerCase() ===
+                currentAccount
+                .toLowerCase()
+        );
+
+    if (!mine.length) {
+
+        container.innerHTML =
+            "No tokens found";
+
+        return;
+
+    }
+
+    container.innerHTML =
+        mine.map(
+            token => `
+            <div>
+
+                <b>${token.name}</b>
+                (${token.symbol})
+
+                <br>
+
+                ${token.tokenAddress}
+
+                <br>
+
+                <a href="${CONFIG.EXPLORER_URL}/address/${token.tokenAddress}" target="_blank">
+                    View
+                </a>
+
+            </div>
+
+            <hr>
+            `
+        ).join("");
 
 }
 
@@ -326,8 +458,8 @@ async function downloadVerificationPackage(
     const zip =
         new JSZip();
 
-    const verifyInfo =
-
+    zip.file(
+        "verify-info.txt",
 `TOKEN ADDRESS
 ${data.tokenAddress}
 
@@ -345,73 +477,12 @@ ${data.symbol}
 
 SUPPLY
 ${data.supply}
-
-COMPILER
-0.8.24
-
-OPTIMIZER
-Enabled
-
-RUNS
-200
-
-EVM VERSION
-Paris
-`;
-
-    const compilerSettings = {
-
-        compilerVersion:
-            "0.8.24",
-
-        optimizer: {
-
-            enabled: true,
-
-            runs: 200
-
-        },
-
-        evmVersion:
-            "paris"
-
-    };
-
-    const constructorArguments =
-
-`name_ = ${data.name}
-
-symbol_ = ${data.symbol}
-
-supply_ = ${data.supply}
-
-creator_ = ${data.creator}`;
-
-    zip.file(
-        "verify-info.txt",
-        verifyInfo
-    );
-
-    zip.file(
-        "compiler-settings.json",
-        JSON.stringify(
-            compilerSettings,
-            null,
-            2
-        )
-    );
-
-    zip.file(
-        "constructor-arguments.txt",
-        constructorArguments
+`
     );
 
     const blob =
         await zip.generateAsync({
-
-            type:
-                "blob"
-
+            type: "blob"
         });
 
     const link =
@@ -438,3 +509,14 @@ creator_ = ${data.creator}`;
     );
 
 }
+
+window.addEventListener(
+    "load",
+    () => {
+
+        renderDeployments();
+        loadFactoryStats();
+        loadMyTokens();
+
+    }
+);
