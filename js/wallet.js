@@ -2,6 +2,18 @@ let provider;
 let signer;
 let currentAccount;
 
+function shortenAddress(address) {
+
+    return (
+        address.substring(0, 6) +
+        "..." +
+        address.substring(
+            address.length - 4
+        )
+    );
+
+}
+
 async function connectWallet() {
 
     if (!window.ethereum) {
@@ -15,6 +27,11 @@ async function connectWallet() {
     }
 
     try {
+
+        provider =
+            new ethers.providers.Web3Provider(
+                window.ethereum
+            );
 
         await provider.send(
             "eth_requestAccounts",
@@ -107,19 +124,11 @@ async function switchToEvoz() {
 
 }
 
-function shortenAddress(address) {
-
-    return (
-        address.substring(0, 6) +
-        "..." +
-        address.substring(
-            address.length - 4
-        )
-    );
-
-}
-
 async function updateWalletInfo() {
+
+    if (!window.ethereum) {
+        return;
+    }
 
     provider =
         new ethers.providers.Web3Provider(
@@ -132,9 +141,14 @@ async function updateWalletInfo() {
     if (accounts.length === 0) {
 
         document.getElementById(
+            "connectBtn"
+        ).innerText =
+            "Connect Wallet";
+
+        document.getElementById(
             "walletAddress"
         ).innerText =
-            "Wallet not connected";
+            "Supported by EVOZX";
 
         return;
 
@@ -147,15 +161,23 @@ async function updateWalletInfo() {
         provider.getSigner();
 
     document.getElementById(
-        "walletAddress"
+        "connectBtn"
     ).innerText =
         shortenAddress(
             currentAccount
         );
 
+    document.getElementById(
+        "walletAddress"
+    ).innerText =
+        "Supported by EVOZX";
+
     const chainId =
         await window.ethereum.request({
-            method: "eth_chainId"
+
+            method:
+                "eth_chainId"
+
         });
 
     const networkDiv =
@@ -163,32 +185,24 @@ async function updateWalletInfo() {
             "networkStatus"
         );
 
-    if (networkDiv) {
+    if (
+        parseInt(chainId, 16) ===
+        CONFIG.CHAIN_ID
+    ) {
 
-        if (
-            parseInt(chainId, 16) ===
-            CONFIG.CHAIN_ID
-        ) {
+        networkDiv.innerText =
+            "Network: EVOZ Mainnet";
 
-            networkDiv.innerText =
-                "Network: EVOZ Mainnet";
+    } else {
 
-        } else {
-
-            networkDiv.innerText =
-                "Network: Wrong Network";
-
-        }
+        networkDiv.innerText =
+            "Network: Wrong Network";
 
     }
 
 }
 
 async function checkConnection() {
-
-    if (!window.ethereum) {
-        return;
-    }
 
     try {
 
@@ -211,20 +225,12 @@ if (window.ethereum) {
 
     window.ethereum.on(
         "accountsChanged",
-        function() {
-
-            updateWalletInfo();
-
-        }
+        updateWalletInfo
     );
 
     window.ethereum.on(
         "chainChanged",
-        function() {
-
-            updateWalletInfo();
-
-        }
+        updateWalletInfo
     );
 
 }
