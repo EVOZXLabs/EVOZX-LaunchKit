@@ -4,26 +4,35 @@ async function deployToken() {
 
         if (!window.ethereum) {
 
-            alert("Wallet tidak terdeteksi");
+            alert(
+                "Wallet tidak terdeteksi"
+            );
+
             return;
 
         }
 
         const name =
             document
-                .getElementById("tokenName")
+                .getElementById(
+                    "tokenName"
+                )
                 .value
                 .trim();
 
         const symbol =
             document
-                .getElementById("tokenSymbol")
+                .getElementById(
+                    "tokenSymbol"
+                )
                 .value
                 .trim();
 
         const supply =
             document
-                .getElementById("tokenSupply")
+                .getElementById(
+                    "tokenSupply"
+                )
                 .value
                 .trim();
 
@@ -121,36 +130,6 @@ async function deployToken() {
 
         }
 
-        const deployment = {
-
-            tokenAddress,
-
-            txHash:
-                receipt.transactionHash,
-
-            creator,
-
-            name,
-
-            symbol,
-
-            supply,
-
-            timestamp:
-                Date.now()
-
-        };
-
-        saveDeployment(
-            deployment
-        );
-
-        renderDeployments();
-
-        loadMyTokens();
-
-        loadFactoryStats();
-
         document.getElementById(
             "deployStatus"
         ).innerText =
@@ -159,16 +138,11 @@ async function deployToken() {
         const verificationData = {
 
             tokenAddress,
-
             txHash:
                 receipt.transactionHash,
-
             creator,
-
             name,
-
             symbol,
-
             supply
 
         };
@@ -196,9 +170,7 @@ async function deployToken() {
 
             <br><br>
 
-            <a
-                href="${CONFIG.EXPLORER_URL}/address/${tokenAddress}"
-                target="_blank">
+            <a href="${CONFIG.EXPLORER_URL}/address/${tokenAddress}" target="_blank">
                 View Explorer
             </a>
 
@@ -216,6 +188,9 @@ async function deployToken() {
                 Download Verification Package
             </button>
             `;
+
+        await loadFactoryStats();
+        await loadMyTokens();
 
     } catch (error) {
 
@@ -283,99 +258,11 @@ async function addTokenToWallet(
 
     } catch (error) {
 
-        console.error(error);
-
-    }
-
-}
-
-function saveDeployment(
-    deployment
-) {
-
-    let deployments =
-        JSON.parse(
-            localStorage.getItem(
-                "evozxDeployments"
-            )
-        ) || [];
-
-    deployments.unshift(
-        deployment
-    );
-
-    localStorage.setItem(
-        "evozxDeployments",
-        JSON.stringify(
-            deployments
-        )
-    );
-
-}
-
-function getDeployments() {
-
-    return JSON.parse(
-        localStorage.getItem(
-            "evozxDeployments"
-        )
-    ) || [];
-
-}
-
-function renderDeployments() {
-
-    const deployments =
-        getDeployments();
-
-    const container =
-        document.getElementById(
-            "recentDeployments"
+        console.error(
+            error
         );
 
-    if (!container)
-        return;
-
-    if (!deployments.length) {
-
-        container.innerHTML =
-            "No deployments yet";
-
-        return;
-
     }
-
-    container.innerHTML =
-        deployments.map(
-
-            token =>
-
-            `
-            <div>
-
-                <b>${token.name}</b>
-                (${token.symbol})
-
-                <br>
-
-                ${token.tokenAddress}
-
-                <br>
-
-                <a
-                    href="${CONFIG.EXPLORER_URL}/address/${token.tokenAddress}"
-                    target="_blank">
-
-                    Explorer
-
-                </a>
-
-            </div>
-
-            <hr>
-            `
-
-        ).join("");
 
 }
 
@@ -386,8 +273,19 @@ async function loadFactoryStats() {
             "factoryStats"
         );
 
-    if (!stats)
+    const recent =
+        document.getElementById(
+            "recentDeployments"
+        );
+
+    if (
+        !stats ||
+        !recent
+    ) {
+
         return;
+
+    }
 
     try {
 
@@ -409,22 +307,90 @@ async function loadFactoryStats() {
         stats.innerHTML =
 
             `
-            Total Tokens Created:
-            <b>${total.toString()}</b>
+            <b>Total Tokens Created:</b>
+            ${total.toString()}
             `;
+
+        let html = "";
+
+        const maxShow = 5;
+
+        const start =
+            Math.max(
+                0,
+                Number(total) - maxShow
+            );
+
+        for (
+            let i = Number(total) - 1;
+            i >= start;
+            i--
+        ) {
+
+            const token =
+                await factory.getToken(
+                    i
+                );
+
+            const createdDate =
+                new Date(
+                    Number(
+                        token.createdAt
+                    ) * 1000
+                ).toLocaleString();
+
+            html +=
+
+                `
+                <div>
+
+                    <b>${token.name}</b>
+                    (${token.symbol})
+
+                    <br>
+
+                    ${token.token}
+
+                    <br>
+
+                    Supply:
+                    ${ethers.utils.formatUnits(
+                        token.supply,
+                        18
+                    )}
+
+                    <br>
+
+                    ${createdDate}
+
+                    <br>
+
+                    <a href="${CONFIG.EXPLORER_URL}/address/${token.token}" target="_blank">
+                        Explorer
+                    </a>
+
+                </div>
+
+                <hr>
+                `;
+
+        }
+
+        recent.innerHTML =
+            html ||
+            "No tokens found";
 
     } catch (error) {
 
-        console.error(error);
-
-        stats.innerHTML =
-            "Unable to load stats";
+        console.error(
+            error
+        );
 
     }
 
 }
 
-function loadMyTokens() {
+async function loadMyTokens() {
 
     const container =
         document.getElementById(
@@ -443,61 +409,86 @@ function loadMyTokens() {
 
     }
 
-    const deployments =
-        getDeployments();
+    try {
 
-    const mine =
-        deployments.filter(
+        const provider =
+            new ethers.providers.JsonRpcProvider(
+                CONFIG.RPC_URL
+            );
 
-            deployment =>
+        const factory =
+            new ethers.Contract(
+                CONFIG.FACTORY_ADDRESS,
+                FACTORY_ABI,
+                provider
+            );
 
-                deployment.creator
-                    .toLowerCase() ===
+        const total =
+            await factory.totalTokens();
+
+        let html = "";
+
+        for (
+            let i = Number(total) - 1;
+            i >= 0;
+            i--
+        ) {
+
+            const token =
+                await factory.getToken(
+                    i
+                );
+
+            if (
+
+                token.creator
+                    .toLowerCase() !==
+
                 currentAccount
                     .toLowerCase()
 
-        );
+            ) {
 
-    if (!mine.length) {
+                continue;
+
+            }
+
+            html +=
+
+                `
+                <div>
+
+                    <b>${token.name}</b>
+                    (${token.symbol})
+
+                    <br>
+
+                    ${token.token}
+
+                    <br>
+
+                    <a href="${CONFIG.EXPLORER_URL}/address/${token.token}" target="_blank">
+                        Explorer
+                    </a>
+
+                </div>
+
+                <hr>
+                `;
+
+        }
 
         container.innerHTML =
+            html ||
             "No tokens found";
 
-        return;
+    } catch (error) {
+
+        console.error(
+            error
+        );
 
     }
-
-    container.innerHTML =
-        mine.map(
-
-            token =>
-
-            `
-            <div>
-
-                <b>${token.name}</b>
-                (${token.symbol})
-
-                <br>
-
-                ${token.tokenAddress}
-
-                <br>
-
-                <a
-                    href="${CONFIG.EXPLORER_URL}/address/${token.tokenAddress}"
-                    target="_blank">
-
-                    View
-
-                </a>
-
-            </div>
-
-            <hr>
-            `
-
-        ).join("");
 
 }
 
@@ -527,65 +518,11 @@ ${data.symbol}
 
 SUPPLY
 ${data.supply}
-
-COMPILER
-0.8.24
-
-OPTIMIZER
-Enabled
-
-RUNS
-200
-
-EVM VERSION
-Paris
 `;
-
-    const compilerSettings = {
-
-        compilerVersion:
-            "0.8.24",
-
-        optimizer: {
-
-            enabled: true,
-
-            runs: 200
-
-        },
-
-        evmVersion:
-            "paris"
-
-    };
-
-    const constructorArguments =
-
-`name_ = ${data.name}
-
-symbol_ = ${data.symbol}
-
-supply_ = ${data.supply}
-
-creator_ = ${data.creator}`;
 
     zip.file(
         "verify-info.txt",
         verifyInfo
-    );
-
-    zip.file(
-        "compiler-settings.json",
-        JSON.stringify(
-            compilerSettings,
-            null,
-            2
-        )
-    );
-
-    zip.file(
-        "constructor-arguments.txt",
-        constructorArguments
     );
 
     const blob =
@@ -623,13 +560,11 @@ creator_ = ${data.creator}`;
 
 window.addEventListener(
     "load",
-    () => {
+    async () => {
 
-        renderDeployments();
+        await loadFactoryStats();
 
-        loadFactoryStats();
-
-        loadMyTokens();
+        await loadMyTokens();
 
     }
 );
