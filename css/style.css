@@ -533,3 +533,63 @@ header h1 {
 
     border-color: #38bdf8;
 }
+
+.stats-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+}
+
+.stat-box {
+
+    background: #1e293b;
+
+    border: 1px solid #334155;
+
+    border-radius: 14px;
+
+    padding: 18px;
+
+    text-align: center;
+}
+
+.stat-value {
+
+    font-size: 24px;
+
+    font-weight: bold;
+
+    color: #38bdf8;
+}
+
+.stat-label {
+
+    margin-top: 8px;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+}
+
+@media(max-width:600px){
+
+    .stats-grid{
+
+        grid-template-columns:
+            repeat(3,1fr);
+
+    }
+
+    .stat-value{
+
+        font-size:18px;
+
+    }
+
+}
