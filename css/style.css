@@ -343,3 +343,94 @@ hr {
             rgba(56,189,248,.5)
         );
 }
+
+/* LOGO */
+
+.main-logo {
+
+    width: 110px;
+
+    display: block;
+
+    margin: 15px auto 20px;
+
+    filter:
+        drop-shadow(
+            0 0 12px
+            rgba(
+                56,
+                189,
+                248,
+                0.35
+            )
+        );
+
+    animation:
+        logoFloat
+        4s
+        ease-in-out
+        infinite;
+}
+
+@keyframes logoFloat {
+
+    0% {
+        transform:
+            translateY(0);
+    }
+
+    50% {
+        transform:
+            translateY(-6px);
+    }
+
+    100% {
+        transform:
+            translateY(0);
+    }
+
+}
+
+/* HEADER */
+
+header {
+
+    padding-top: 10px;
+}
+
+/* CARD EFFECT */
+
+.card {
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.card:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 0 20px
+        rgba(
+            56,
+            189,
+            248,
+            0.10
+        );
+}
+
+/* FOOTER */
+
+footer {
+
+    text-align: center;
+
+    margin-top: 25px;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
