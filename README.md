@@ -1,66 +1,124 @@
-# EVOZX Launch Kit
+<div align="center"><img src="img/evoz-banner.png" width="100%">🚀 EVOZX Launch Kit
 
-Create Your Token Project on EVOZ Mainnet.
+Build • Launch • Deploy on EVOZ Mainnet
 
----
+<p><img src="https://img.shields.io/badge/Network-EVOZ_Mainnet-00D4FF?style=for-the-badge"><img src="https://img.shields.io/badge/Version-v1.0_Stable-success?style=for-the-badge"><img src="https://img.shields.io/badge/ERC20-Burnable-orange?style=for-the-badge"><img src="https://img.shields.io/badge/Mobile-Friendly-blue?style=for-the-badge"></p>A lightweight ERC20 token launchpad built for the EVOZ ecosystem.
 
-## Overview
+Deploy your own token directly from your browser.
 
-EVOZX Launch Kit is a builder toolkit designed to help users create professional blockchain projects on EVOZ Mainnet.
+</div>---
 
-The goal is to simplify token creation, documentation, branding, and deployment.
+🌐 Live Application
 
----
-
-## Features
-
-### Token Generator
-
-Generate ERC20 token contracts using OpenZeppelin standards.
-
-### README Generator
-
-Generate project documentation ready for GitHub.
-
-### Whitepaper Generator
-
-Generate professional project whitepapers.
-
-### Roadmap Generator
-
-Generate project development roadmaps.
-
-### Deployment Guide
-
-Step-by-step deployment instructions for EVOZ Mainnet.
+https://evozxlabs.github.io/EVOZX-LaunchKit/
 
 ---
 
-## Roadmap
+⚡ Key Features
 
-### Phase 1
-
-- Documentation
-- GitHub Pages Website
-
-### Phase 2
-
-- Token Generator
-
-### Phase 3
-
-- Whitepaper Generator
-
-### Phase 4
-
-- Community Project Directory
+Feature| Status
+ERC20 Deployment| ✅
+Burnable Tokens| ✅
+Wallet Connect| ✅
+Factory Dashboard| ✅
+Recent Deployments| ✅
+Explorer Integration| ✅
+Verification Package| ✅
+Mobile Support| ✅
 
 ---
 
-## Mission
+🖼 EVOZ Mainnet
 
-Make project creation on EVOZ Mainnet accessible to everyone.
+<p align="center"><img src="img/evoz-mainnet-badge.png" width="700"></p>---
+
+🚀 Deploy A Token
+
+1️⃣ Connect Wallet
+
+TokenPocket, OKX Wallet, Bitget Wallet, Rabby, or MetaMask.
+
+2️⃣ Switch To EVOZ Mainnet
+
+Automatic network detection and switching.
+
+3️⃣ Configure Token
+
+- Name
+- Symbol
+- Supply
+
+4️⃣ Deploy
+
+Approve the transaction.
+
+5️⃣ Done
+
+Your token is now live on EVOZ Mainnet.
 
 ---
 
-Powered by EVOZX Labs
+🏭 Factory Contract
+
+0x3F810a44D29a4f0fF7880641E69EBCBc076dA220
+
+---
+
+📊 Network Information
+
+Parameter| Value
+Network| EVOZ Mainnet
+Chain ID| 805
+Currency| EVOZ
+RPC| https://rpc.evozscan.com
+Explorer| https://evozscan.com
+
+---
+
+🛠 Technology Stack
+
+- Solidity
+- OpenZeppelin
+- Ethers.js
+- JavaScript
+- HTML5
+- CSS3
+- GitHub Pages
+
+---
+
+🟢 Current Release
+
+EVOZX Launch Kit v1.0 Stable
+
+Completed:
+
+- ERC20 Token Deployment
+- Burnable Support
+- Wallet Integration
+- Factory Statistics
+- Recent Deployments
+- Verification Package
+- Mobile Optimization
+- Dark UI
+
+---
+
+🔮 Version 2 Roadmap
+
+- Mintable Tokens
+- Ownable Tokens
+- Pausable Tokens
+- Multiple Templates
+- Verification Improvements
+- Community Token Directory
+
+---
+
+<div align="center">Powered by EVOZX Labs
+
+Building Tools For The EVOZ Ecosystem
+
+© 2026 EVOZX Labs
+
+</div>
