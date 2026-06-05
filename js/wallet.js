@@ -1,6 +1,6 @@
 let provider;
 let signer;
-let currentAccount;
+let currentAccount = null;
 
 function shortenAddress(address) {
 
@@ -41,6 +41,11 @@ async function connectWallet() {
         await switchToEvoz();
 
         await updateWalletInfo();
+
+        // refresh dashboard
+        if (typeof loadFactoryStats === "function") {
+            loadFactoryStats();
+        }
 
     } catch (error) {
 
@@ -162,11 +167,25 @@ async function updateWalletInfo() {
 
     if (accounts.length === 0) {
 
+        currentAccount = null;
+
         connectBtn.innerText =
             "Connect Wallet";
 
         networkDiv.innerText =
             "⚪ Wallet Not Connected";
+
+        const myTokens =
+            document.getElementById(
+                "myTokens"
+            );
+
+        if (myTokens) {
+
+            myTokens.innerHTML =
+                "Connect wallet first";
+
+        }
 
         return;
 
@@ -206,6 +225,11 @@ async function updateWalletInfo() {
 
     }
 
+    // refresh data setelah wallet connect
+    if (typeof loadFactoryStats === "function") {
+        loadFactoryStats();
+    }
+
 }
 
 async function checkConnection() {
@@ -239,4 +263,4 @@ if (window.ethereum) {
         updateWalletInfo
     );
 
-}
+                }
