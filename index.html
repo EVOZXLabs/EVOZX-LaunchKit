@@ -1,256 +1,267 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 
-<head>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
-    <meta charset="UTF-8">
+<title>
+    EVOZX Launch Kit
+</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+<link
+    rel="icon"
+    type="image/png"
+    href="img/logo.png">
 
-    <title>
-        EVOZX Launch Kit
-    </title>
+<link
+    rel="stylesheet"
+    href="css/style.css">
 
-    <link
-        rel="icon"
-        type="image/png"
-        href="img/logo.png">
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 
-    <link
-        rel="stylesheet"
-        href="css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</head><body><div class="container">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <header>
 
-</head>
+        <img
+            src="img/logo.png"
+            class="main-logo"
+            alt="EVOZX Logo">
 
-<body>
+        <h1>
+            EVOZX Launch Kit
+        </h1>
 
-    <div class="container">
+        <p>
+            Create ERC20 Tokens on EVOZ Mainnet
+        </p>
 
-        <header>
+    </header>
 
-            <img
-                src="img/logo.png"
-                class="main-logo"
-                alt="EVOZX Logo">
+    <!-- DASHBOARD -->
 
-            <h1>
-                EVOZX Launch Kit
-            </h1>
+    <section class="stats-grid">
 
-            <p>
-                Create ERC20 Tokens on EVOZ Mainnet
-            </p>
+        <div class="stat-box">
 
-        </header>
-<section class="stats-grid">
+            <div
+                class="stat-value"
+                id="totalTokensStat">
 
-    <div class="stat-box">
-
-        <div
-            class="stat-value"
-            id="totalTokensStat">
-
-            0
-
-        </div>
-
-        <div class="stat-label">
-
-            Total Tokens
-
-        </div>
-
-    </div>
-
-    <div class="stat-box">
-
-        <div
-            class="stat-value"
-            id="myTokensStat">
-
-            0
-
-        </div>
-
-        <div class="stat-label">
-
-            My Tokens
-
-        </div>
-
-    </div>
-
-    <div class="stat-box">
-
-        <div class="stat-value">
-
-            EVOZ
-
-        </div>
-
-        <div class="stat-label">
-
-            Network
-
-        </div>
-
-    </div>
-
-</section>
-        
-        <section class="card">
-
-            <h2>
-                Token Information
-            </h2>
-
-            <input
-                type="text"
-                id="tokenName"
-                placeholder="Token Name">
-
-            <input
-                type="text"
-                id="tokenSymbol"
-                placeholder="Token Symbol">
-
-            <input
-                type="number"
-                id="tokenSupply"
-                placeholder="Total Supply">
-
-        </section>
-
-        <section class="card">
-
-            <h2>
-                Wallet
-            </h2>
-
-            <button id="connectBtn">
-                Connect Wallet
-            </button>
-
-            <br><br>
-
-            <div id="networkStatus">
-                ⚪ Wallet Not Connected
-            </div>
-
-        </section>
-
-        <section class="card">
-
-            <h2>
-                Deploy Token
-            </h2>
-
-            <button id="deployBtn">
-                Deploy Token
-            </button>
-
-            <div id="deployStatus">
-
-                Waiting...
+                0
 
             </div>
 
-        </section>
+            <div class="stat-label">
 
-        <section class="card">
-
-            <h2>
-                Deployment Result
-            </h2>
-
-            <div id="tokenResult">
-
-                No token deployed yet
+                Total Tokens
 
             </div>
 
-        </section>
+        </div>
 
-        <section class="card">
+        <div class="stat-box">
 
-            <h2>
-                Factory Statistics
-            </h2>
+            <div
+                class="stat-value"
+                id="myTokensStat">
 
-            <div id="factoryStats">
-
-                Loading...
+                0
 
             </div>
 
-        </section>
+            <div class="stat-label">
 
-        <section class="card">
-
-            <h2>
                 My Tokens
-            </h2>
-
-            <div id="myTokens">
-
-                Connect wallet first
 
             </div>
 
-        </section>
+        </div>
 
-        <section class="card">
+        <div class="stat-box">
 
-            <h2>
-                Recent Deployments
-            </h2>
+            <div class="stat-value">
 
-            <div id="recentDeployments">
-
-                Loading...
+                EVOZ
 
             </div>
 
-        </section>
+            <div class="stat-label">
 
-        <section class="card info-card">
-
-            <div class="network-badge">
-
-                EVOZ Mainnet
+                Network
 
             </div>
 
-            <div class="support-text">
+        </div>
 
-                Powered by EVOZX Labs
+    </section>
 
-            </div>
+    <!-- TOKEN INFO -->
 
-        </section>
+    <section class="card">
 
-        <footer>
+        <h2>
+            Token Information
+        </h2>
 
-            © 2026 EVOZX Labs
+        <input
+            type="text"
+            id="tokenName"
+            placeholder="Token Name">
 
-        </footer>
+        <input
+            type="text"
+            id="tokenSymbol"
+            placeholder="Token Symbol">
 
-    </div>
+        <input
+            type="number"
+            id="tokenSupply"
+            placeholder="Total Supply">
 
-    <script src="js/config.js"></script>
+    </section>
 
-    <script src="js/wallet.js"></script>
+    <!-- WALLET -->
 
-    <script src="js/deploy.js"></script>
+    <section class="card">
 
-    <script src="js/app.js"></script>
+        <h2>
+            Wallet
+        </h2>
 
-</body>
+        <button id="connectBtn">
 
-</html>
+            Connect Wallet
+
+        </button>
+
+        <br><br>
+
+        <div id="networkStatus">
+
+            ⚪ Wallet Not Connected
+
+        </div>
+
+    </section>
+
+    <!-- DEPLOY -->
+
+    <section class="card">
+
+        <h2>
+            Deploy Token
+        </h2>
+
+        <button id="deployBtn">
+
+            Deploy Token
+
+        </button>
+
+        <div id="deployStatus">
+
+            Waiting...
+
+        </div>
+
+    </section>
+
+    <!-- RESULT -->
+
+    <section class="card">
+
+        <h2>
+            Deployment Result
+        </h2>
+
+        <div id="tokenResult">
+
+            No token deployed yet
+
+        </div>
+
+    </section>
+
+    <!-- FACTORY -->
+
+    <section class="card">
+
+        <h2>
+            Factory Statistics
+        </h2>
+
+        <div id="factoryStats">
+
+            Loading...
+
+        </div>
+
+    </section>
+
+    <!-- MY TOKENS -->
+
+    <section class="card">
+
+        <h2>
+            My Tokens
+        </h2>
+
+        <div id="myTokens">
+
+            Connect wallet first
+
+        </div>
+
+    </section>
+
+    <!-- RECENT -->
+
+    <section class="card">
+
+        <h2>
+            Recent Deployments
+        </h2>
+
+        <div id="recentDeployments">
+
+            Loading...
+
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+
+    <section class="card info-card">
+
+        <div class="network-badge">
+
+            EVOZ Mainnet
+
+        </div>
+
+        <div class="support-text">
+
+            Powered by EVOZX Labs
+
+        </div>
+
+    </section>
+
+    <footer>
+
+        © 2026 EVOZX Labs
+
+    </footer>
+
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/wallet.js"></script>
+<script src="js/deploy.js"></script>
+<script src="js/app.js"></script>
+
+</body></html>
