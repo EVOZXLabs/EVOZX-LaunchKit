@@ -5,7 +5,7 @@ async function deployToken() {
         if (!window.ethereum) {
 
             alert(
-                "Wallet tidak terdeteksi"
+                "No wallet detected."
             );
 
             return;
@@ -43,7 +43,7 @@ async function deployToken() {
         ) {
 
             alert(
-                "Isi semua field terlebih dahulu"
+                "Please complete all fields."
             );
 
             return;
@@ -88,7 +88,7 @@ async function deployToken() {
         ).innerHTML =
         `
         <div class="loading"></div>
-        Transaction sent...
+        Transaction submitted...
         `;
 
         const receipt =
@@ -131,7 +131,7 @@ async function deployToken() {
                 "deployStatus"
             ).innerHTML =
             `
-            ❌ Deploy success but token address not found
+            ❌ Deployment completed, but token address was not found.
             `;
 
             return;
@@ -142,7 +142,7 @@ async function deployToken() {
             "deployStatus"
         ).innerHTML =
         `
-        ✅ Token deployed successfully
+        ✅ Token deployed successfully.
         `;
 
         const verificationData = {
@@ -164,7 +164,9 @@ async function deployToken() {
 
         document.getElementById(
             "tokenResult"
-        ).innerHTML =`
+        ).innerHTML =
+
+`
 <div class="token-card">
 
     <div class="token-symbol">
@@ -194,9 +196,10 @@ async function deployToken() {
 
     <div class="token-actions">
 
-        <button onclick="copyTokenAddress('${tokenAddress}')">
+        <button
+        onclick="copyTokenAddress('${tokenAddress}')">
 
-            Copy Address
+            Copy Token Address
 
         </button>
 
@@ -218,7 +221,7 @@ async function deployToken() {
 
         <summary>
 
-            Details
+            Token Details
 
         </summary>
 
@@ -232,7 +235,7 @@ async function deployToken() {
 
         <br><br>
 
-        TX Hash:
+        Transaction Hash:
 
         <br>
 
@@ -243,7 +246,7 @@ async function deployToken() {
         <button
         onclick="copyText('${receipt.transactionHash}')">
 
-            Copy TX Hash
+            Copy Transaction Hash
 
         </button>
 
@@ -320,7 +323,7 @@ function copyTokenAddress(
     );
 
     alert(
-        "Address copied"
+        "Token address copied."
     );
 
 }
@@ -334,7 +337,7 @@ function copyText(
     );
 
     alert(
-        "Copied"
+        "Copied."
     );
 
 }
@@ -343,6 +346,7 @@ async function addTokenToWallet(
     tokenAddress,
     tokenSymbol
 ) {
+
     try {
 
         await window.ethereum.request({
@@ -423,18 +427,23 @@ async function loadFactoryStats() {
         const total =
             await factory.totalTokens();
 
+        const totalCount =
+            Number(total);
+
         document.getElementById(
             "totalTokensStat"
         ).innerText =
-            total.toString();
+            totalCount;
 
-        let myTokenCount = 0;
+        let factoryTokenCount = 0;
 
-        if (currentAccount) {
+        if (
+            currentAccount
+        ) {
 
             for (
                 let i = 0;
-                i < Number(total);
+                i < totalCount;
                 i++
             ) {
 
@@ -453,7 +462,7 @@ async function loadFactoryStats() {
 
                 ) {
 
-                    myTokenCount++;
+                    factoryTokenCount++;
 
                 }
 
@@ -471,24 +480,26 @@ async function loadFactoryStats() {
         ) {
 
             myTokenElement.innerText =
-                myTokenCount;
+                factoryTokenCount;
 
         }
 
-        stats.innerHTML =`
+        stats.innerHTML =
+
+`
 <div class="stats-grid">
 
     <div class="stat-box">
 
         <div class="stat-value">
 
-            ${total}
+            ${totalCount}
 
         </div>
 
         <div class="stat-label">
 
-            Total Tokens
+            Total Factory Tokens
 
         </div>
 
@@ -498,13 +509,13 @@ async function loadFactoryStats() {
 
         <div class="stat-value">
 
-            ${myTokenCount}
+            ${factoryTokenCount}
 
         </div>
 
         <div class="stat-label">
 
-            Your Tokens
+            Your Factory Tokens
 
         </div>
 
@@ -536,11 +547,11 @@ async function loadFactoryStats() {
         const start =
             Math.max(
                 0,
-                Number(total) - maxShow
+                totalCount - maxShow
             );
 
         for (
-            let i = Number(total) - 1;
+            let i = totalCount - 1;
             i >= start;
             i--
         ) {
@@ -558,82 +569,93 @@ async function loadFactoryStats() {
                 ).toLocaleString();
 
             html +=
-            `
-            <div class="token-card">
 
-                <div class="token-symbol">
+`
+<div class="token-card">
 
-                    ${token.symbol}
+    <div class="token-symbol">
 
-                </div>
+        ${token.symbol}
 
-                <div class="token-name">
+    </div>
 
-                    ${token.name}
+    <div class="token-name">
 
-                </div>
+        ${token.name}
 
-                <div class="token-address">
+    </div>
 
-                    ${token.token.substring(
-                        0,
-                        6
-                    )}
-                    ...
-                    ${token.token.substring(
-                        token.token.length - 4
-                    )}
+    <div class="token-address">
 
-                </div>
+        ${token.token.substring(
+            0,
+            6
+        )}
+        ...
+        ${token.token.substring(
+            token.token.length - 4
+        )}
 
-                <div class="token-actions">
+    </div>
 
-                    <a
-                    href="${CONFIG.EXPLORER_URL}/address/${token.token}"
-                    target="_blank">
+    <div class="token-actions">
 
-                        Explorer
+        <a
+        href="${CONFIG.EXPLORER_URL}/address/${token.token}"
+        target="_blank">
 
-                    </a>
+            Open Explorer
 
-                </div>
+        </a>
 
-                <details>
+    </div>
 
-                    <summary>
+    <details>
 
-                        Details
+        <summary>
 
-                    </summary>
+            Token Details
 
-                    <br>
+        </summary>
 
-                    Supply:
-                    ${ethers.utils.formatUnits(
-                        token.supply,
-                        18
-                    )}
+        <br>
 
-                    <br><br>
+        Supply:
 
-                    Creator:
-                    ${token.creator}
+        ${ethers.utils.formatUnits(
+            token.supply,
+            18
+        )}
 
-                    <br><br>
+        <br><br>
 
-                    Created:
-                    ${createdDate}
+        Creator:
 
-                </details>
+        ${token.creator.substring(
+            0,
+            6
+        )}
+        ...
+        ${token.creator.substring(
+            token.creator.length - 4
+        )}
 
-            </div>
-            `;
+        <br><br>
+
+        Created:
+
+        ${createdDate}
+
+    </details>
+
+</div>
+`;
 
         }
 
         recent.innerHTML =
             html ||
-            "No tokens found";
+            "No deployments found.";
 
     } catch (error) {
 
@@ -652,13 +674,16 @@ async function loadMyTokens() {
             "myTokens"
         );
 
-    if (!container)
+    if (!container) {
+
         return;
+
+    }
 
     if (!currentAccount) {
 
         container.innerHTML =
-            "Connect wallet first";
+            "Connect your wallet to view your factory-created tokens.";
 
         return;
 
@@ -682,6 +707,7 @@ async function loadMyTokens() {
             await factory.totalTokens();
 
         let html = "";
+
         for (
             let i = Number(total) - 1;
             i >= 0;
@@ -715,82 +741,92 @@ async function loadMyTokens() {
                 ).toLocaleString();
 
             html +=
-            `
-            <div class="token-card">
+`
+<div class="token-card">
 
-                <div class="token-symbol">
+    <div class="token-symbol">
 
-                    ${token.symbol}
+        ${token.symbol}
 
-                </div>
+    </div>
 
-                <div class="token-name">
+    <div class="token-name">
 
-                    ${token.name}
+        ${token.name}
 
-                </div>
+    </div>
 
-                <div class="token-address">
+    <div class="token-address">
 
-                    ${token.token.substring(
-                        0,
-                        6
-                    )}
-                    ...
-                    ${token.token.substring(
-                        token.token.length - 4
-                    )}
+        ${token.token.substring(
+            0,
+            6
+        )}
+        ...
+        ${token.token.substring(
+            token.token.length - 4
+        )}
 
-                </div>
+    </div>
 
-                <div class="token-actions">
+    <div class="token-actions">
 
-                    <a
-                    href="${CONFIG.EXPLORER_URL}/address/${token.token}"
-                    target="_blank">
+        <a
+        href="${CONFIG.EXPLORER_URL}/address/${token.token}"
+        target="_blank">
 
-                        Explorer
+            Open Explorer
 
-                    </a>
+        </a>
 
-                </div>
+    </div>
 
-                <details>
+    <details>
 
-                    <summary>
+        <summary>
 
-                        Details
+            Token Details
 
-                    </summary>
+        </summary>
 
-                    <br>
+        <br>
 
-                    Supply:
-                    ${ethers.utils.formatUnits(
-                        token.supply,
-                        18
-                    )}
+        Supply:
 
-                    <br><br>
+        ${ethers.utils.formatUnits(
+            token.supply,
+            18
+        )}
 
-                    Created:
-                    ${createdDate}
+        <br><br>
 
-                    <br><br>
+        Creator:
 
-                    Creator:
-                    ${token.creator}
+        ${token.creator.substring(
+            0,
+            6
+        )}
+        ...
+        ${token.creator.substring(
+            token.creator.length - 4
+        )}
 
-                </details>
+        <br><br>
 
-            </div>
-            `;
+        Created:
+
+        ${createdDate}
+
+    </details>
+
+</div>
+`;
 
         }
 
         container.innerHTML =
             html ||
-            "No tokens found";
+            "No factory-created tokens found for this wallet.";
 
     } catch (error) {
 
@@ -814,7 +850,7 @@ async function downloadVerificationPackage(
 `TOKEN ADDRESS
 ${data.tokenAddress}
 
-TX HASH
+TRANSACTION HASH
 ${data.txHash}
 
 CREATOR
