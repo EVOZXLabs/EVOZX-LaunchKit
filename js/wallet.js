@@ -19,7 +19,7 @@ async function connectWallet() {
     if (!window.ethereum) {
 
         alert(
-            "Wallet EVM tidak terdeteksi.\n\nGunakan TokenPocket, OKX Wallet, Bitget Wallet, Rabby atau MetaMask."
+            "No EVM wallet detected.\n\nPlease use TokenPocket, OKX Wallet, Bitget Wallet, Rabby, or MetaMask."
         );
 
         return;
@@ -47,7 +47,7 @@ async function connectWallet() {
         console.error(error);
 
         alert(
-            "Gagal menghubungkan wallet"
+            "Failed to connect wallet"
         );
 
     }
