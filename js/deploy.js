@@ -621,11 +621,7 @@ async function loadFactoryStats() {
         <br>
 
         Supply:
-
-        ${ethers.utils.formatUnits(
-            token.supply,
-            18
-        )}
+${Number(token.supply).toLocaleString()}
 
         <br><br>
 
@@ -792,11 +788,7 @@ async function loadMyTokens() {
         <br>
 
         Supply:
-
-        ${ethers.utils.formatUnits(
-            token.supply,
-            18
-        )}
+${Number(token.supply).toLocaleString()}
 
         <br><br>
 
