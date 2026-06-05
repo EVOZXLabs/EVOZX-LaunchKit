@@ -361,23 +361,92 @@ async function loadFactoryStats() {
         const total =
             await factory.totalTokens();
 
-        stats.innerHTML =
+        let myTokenCount = 0;
 
-            `
-            <div style="
-                text-align:center;
-                font-size:26px;
-                font-weight:bold;
-            ">
-                ${total.toString()}
-            </div>
+if (currentAccount) {
 
-            <div style="
-                text-align:center;
-            ">
-                Total Tokens Created
-            </div>
-            `;
+    for (
+        let i = 0;
+        i < Number(total);
+        i++
+    ) {
+
+        const token =
+            await factory.getToken(i);
+
+        if (
+
+            token.creator
+                .toLowerCase() ===
+
+            currentAccount
+                .toLowerCase()
+
+        ) {
+
+            myTokenCount++;
+
+        }
+
+    }
+
+}
+
+stats.innerHTML =
+
+`
+<div class="stats-grid">
+
+    <div class="stat-box">
+
+        <div class="stat-value">
+
+            ${total}
+
+        </div>
+
+        <div class="stat-label">
+
+            Total Tokens
+
+        </div>
+
+    </div>
+
+    <div class="stat-box">
+
+        <div class="stat-value">
+
+            ${myTokenCount}
+
+        </div>
+
+        <div class="stat-label">
+
+            Your Tokens
+
+        </div>
+
+    </div>
+
+    <div class="stat-box">
+
+        <div class="stat-value">
+
+            EVOZ
+
+        </div>
+
+        <div class="stat-label">
+
+            Mainnet
+
+        </div>
+
+    </div>
+
+</div>
+`;
 
         let html = "";
 
