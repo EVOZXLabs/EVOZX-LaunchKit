@@ -2,27 +2,39 @@
 
 Token Launchpad for EVOZ Mainnet
 
-<img src="img/evoz-mainnet-badge.png" alt="EVOZ Mainnet"><br>Deploy ERC20 Burnable Tokens directly on EVOZ Mainnet.
+<img src="https://img.shields.io/badge/EVOZ-Mainnet-00C3FF?style=for-the-badge" /><img src="https://img.shields.io/badge/Version-v1.0.0-gold?style=for-the-badge" /><img src="https://img.shields.io/badge/Status-Stable-success?style=for-the-badge" /><br><br>
 
-No coding required.
+Create ERC20 Burnable Tokens on EVOZ Mainnet in seconds.
 
-Wallet → Create → Deploy
+No coding. No deployment scripts. No complexity.
 
 </div>---
 
-Launch Kit Preview
+✨ Features
 
-<p align="center">
-<img src="img/launchkit-preview.png" width="350">
-</p>---
+🔹 ERC20 Burnable Token Creation
 
-Overview
+🔹 Mobile Wallet Support
 
-EVOZX Launch Kit is a lightweight ERC20 token launchpad built for the EVOZ ecosystem.
+🔹 One-Click Deployment
 
-Users can create their own ERC20 Burnable tokens directly from a mobile or desktop wallet without writing Solidity code.
+🔹 Factory Statistics Dashboard
 
-Supported wallets:
+🔹 Recent Token Explorer
+
+🔹 EVOZ Mainnet Native Support
+
+🔹 Open Source
+
+---
+
+🌐 Live Launch Kit
+
+https://evozxlabs.github.io/EVOZX-LaunchKit/
+
+---
+
+⚡ Supported Wallets
 
 - TokenPocket
 - MetaMask
@@ -32,138 +44,52 @@ Supported wallets:
 
 ---
 
-Features
+⛓️ Network
 
-Token Creation
-
-- ERC20 Standard
-- ERC20 Burnable
-- Instant Deployment
-- Creator Receives Full Supply
-
-Wallet Integration
-
-- Connect Wallet
-- Auto Network Switch
-- EVOZ Mainnet Support
-
-Explorer Integration
-
-- Token Contract Links
-- Transaction Links
-- Explorer Navigation
-
-Statistics
-
-- Total Factory Tokens
-- Your Factory Tokens
-- Recent Deployments
-
-Mobile Friendly
-
-- Android Support
-- iOS Support
-- Responsive UI
+Item| Value
+Network| EVOZ Mainnet
+Chain ID| 805
+Currency| EVOZ
+RPC| https://rpc.evozscan.com
+Explorer| https://evozscan.com
 
 ---
 
-Network Information
-
-EVOZ Mainnet
-
-Factory Address
+🏭 Factory Contract
 
 0x3F810a44D29a4f0fF7880641E69EBCBc076dA220
 
-Chain ID
+---
 
-805
+🔥 Token Standard
 
-RPC
+Generated tokens include:
 
-https://rpc.evozscan.com
+- ERC20
+- ERC20 Burnable
 
-Explorer
+Functions available:
 
-https://evozscan.com
-
-Native Coin
-
-EVOZ
+transfer()
+approve()
+transferFrom()
+burn()
+burnFrom()
 
 ---
 
-Token Standard
+🚀 How It Works
 
-Generated tokens are based on:
-
-ERC20
-ERC20Burnable
-
-Supported functions:
-
-- transfer()
-- approve()
-- transferFrom()
-- burn()
-- burnFrom()
+1. Connect Wallet
+2. Enter Token Name
+3. Enter Symbol
+4. Enter Supply
+5. Deploy Token
+6. Receive Contract Address
 
 ---
 
-Project Structure
-
-EVOZX-LaunchKit
-│
-├── index.html
-├── css/
-├── js/
-├── img/
-└── README.md
-
----
-
-Live Demo
-
-https://evozxlabs.github.io/EVOZX-LaunchKit/
-
----
-
-Status
-
-Component| Status
-Wallet Connect| ✅
-Token Deployment| ✅
-Factory Statistics| ✅
-Recent Deployments| ✅
-Mobile UI| ✅
-GitHub Pages| ✅
-
----
-
-Roadmap
-
-V1 Stable
-
-- ERC20 Burnable Factory
-- Wallet Integration
-- Mobile UI
-- Statistics Dashboard
-
-V2
-
-- Verification Package Generator
-- Factory Analytics
-- Token Search
-
-V3
-
-- Liquidity Launcher
-- Presale Module
-- Token Locker
-
----
-
-License
+📜 License
 
 MIT License
 
@@ -172,7 +98,5 @@ MIT License
 <div align="center">Powered by EVOZX Labs
 
 Building the Future of EVOZ Ecosystem
-
-© 2026 EVOZX Labs
 
 </div>
