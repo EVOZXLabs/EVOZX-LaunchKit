@@ -51,12 +51,12 @@ async function deployToken() {
         }
 
         document.getElementById(
-    "deployStatus"
-).innerHTML =
-`
-<div class="loading"></div>
-Waiting for wallet confirmation...
-`;
+            "deployStatus"
+        ).innerHTML =
+        `
+        <div class="loading"></div>
+        Waiting for wallet confirmation...
+        `;
 
         const provider =
             new ethers.providers.Web3Provider(
@@ -84,12 +84,12 @@ Waiting for wallet confirmation...
             );
 
         document.getElementById(
-    "deployStatus"
-).innerHTML =
-`
-<div class="loading"></div>
-Transaction sent...
-`;
+            "deployStatus"
+        ).innerHTML =
+        `
+        <div class="loading"></div>
+        Transaction sent...
+        `;
 
         const receipt =
             await tx.wait();
@@ -129,19 +129,21 @@ Transaction sent...
 
             document.getElementById(
                 "deployStatus"
-            ).innerText =
-                "Deploy success but token address not found";
+            ).innerHTML =
+            `
+            ❌ Deploy success but token address not found
+            `;
 
             return;
 
         }
 
         document.getElementById(
-    "deployStatus"
-).innerHTML =
-`
-✅ Token deployed successfully
-`;
+            "deployStatus"
+        ).innerHTML =
+        `
+        ✅ Token deployed successfully
+        `;
 
         const verificationData = {
 
@@ -160,7 +162,7 @@ Transaction sent...
 
         };
 
-        document.getElementById(
+    document.getElementById(
             "tokenResult"
         ).innerHTML =
 
@@ -168,15 +170,11 @@ Transaction sent...
         <div class="token-card">
 
             <div class="token-symbol">
-
                 ${symbol}
-
             </div>
 
             <div class="token-name">
-
                 ${name}
-
             </div>
 
             <div class="token-address">
@@ -194,7 +192,8 @@ Transaction sent...
 
             <div class="token-actions">
 
-                <button onclick="copyTokenAddress('${tokenAddress}')">
+                <button
+                onclick="copyTokenAddress('${tokenAddress}')">
 
                     Copy Address
 
@@ -203,14 +202,26 @@ Transaction sent...
                 <br><br>
 
                 <button
-onclick="window.open(
-'${CONFIG.EXPLORER_URL}/address/${tokenAddress}',
-'_blank'
-)">
+                onclick="window.open(
+                '${CONFIG.EXPLORER_URL}/address/${tokenAddress}',
+                '_blank'
+                )">
 
-Open Explorer
+                    Open Explorer
 
-</button>
+                </button>
+
+                <br><br>
+
+                <button
+                onclick="window.open(
+                '${CONFIG.EXPLORER_URL}/tx/${receipt.transactionHash}',
+                '_blank'
+                )">
+
+                    View Transaction
+
+                </button>
 
             </div>
 
@@ -223,20 +234,27 @@ Open Explorer
                 <br>
 
                 Full Address:
+
                 <br>
+
                 ${tokenAddress}
 
                 <br><br>
 
                 TX Hash:
-<br>
-${receipt.transactionHash}
 
-<br><br>
+                <br>
 
-<button onclick="copyText('${receipt.transactionHash}')">
-    Copy TX Hash
-</button>
+                ${receipt.transactionHash}
+
+                <br><br>
+
+                <button
+                onclick="copyText('${receipt.transactionHash}')">
+
+                    Copy TX Hash
+
+                </button>
 
             </details>
 
@@ -244,7 +262,11 @@ ${receipt.transactionHash}
 
         <br>
 
-        <button onclick="addTokenToWallet('${tokenAddress}','${symbol}')">
+        <button
+        onclick="addTokenToWallet(
+        '${tokenAddress}',
+        '${symbol}'
+        )">
 
             Add Token To Wallet
 
@@ -252,34 +274,37 @@ ${receipt.transactionHash}
 
         <br><br>
 
-        <button onclick='downloadVerificationPackage(${JSON.stringify(
+        <button
+        onclick='downloadVerificationPackage(
+        ${JSON.stringify(
             verificationData
-        )})'>
+        )}
+        )'>
 
             Download Verification Package
 
         </button>
         `;
 
-        await loadFactoryStats();
+    await loadFactoryStats();
 
         await loadMyTokens();
 
         setTimeout(
-    loadMyTokens,
-    5000
-);
-        
+            loadMyTokens,
+            5000
+        );
+
     } catch (error) {
 
         console.error(error);
 
         document.getElementById(
-    "deployStatus"
-).innerHTML =
-`
-❌ ${error.message}
-`;
+            "deployStatus"
+        ).innerHTML =
+        `
+        ❌ ${error.message}
+        `;
 
     }
 
@@ -298,16 +323,6 @@ function copyTokenAddress(
     );
 
 }
-
-<br><br>
-
-<a
-href="${CONFIG.EXPLORER_URL}/tx/${receipt.transactionHash}"
-target="_blank">
-
-View Transaction
-
-</a>
 
 function copyText(text) {
 
@@ -360,9 +375,7 @@ async function addTokenToWallet(
 
     } catch (error) {
 
-        console.error(
-            error
-        );
+        console.error(error);
 
     }
 
@@ -407,130 +420,97 @@ async function loadFactoryStats() {
             await factory.totalTokens();
 
         document.getElementById(
-    "totalTokensStat"
-).innerText =
-    total.toString();
-        
+            "totalTokensStat"
+        ).innerText =
+            total.toString();
+
         let myTokenCount = 0;
 
-        const myTokenElement =
-    document.getElementById(
-        "myTokensStat"
-    );
+        if (currentAccount) {
 
-if (myTokenElement) {
+            for (
+                let i = 0;
+                i < Number(total);
+                i++
+            ) {
 
-    myTokenElement.innerText =
-        myTokenCount;
+                const token =
+                    await factory.getToken(i);
 
-}
-        
-if (currentAccount) {
+                if (
 
-    for (
-        let i = 0;
-        i < Number(total);
-        i++
-    ) {
+                    token.creator
+                        .toLowerCase() ===
 
-        const token =
-            await factory.getToken(i);
+                    currentAccount
+                        .toLowerCase()
 
-        if (
+                ) {
 
-            token.creator
-                .toLowerCase() ===
+                    myTokenCount++;
 
-            currentAccount
-                .toLowerCase()
-
-        ) {
-
-            if (
-
-    token.creator
-        .toLowerCase() ===
-
-    currentAccount
-        .toLowerCase()
-
-) {
-
-    myTokenCount++;
+                }
 
             }
-            
-            myTokenCount++;
 
         }
 
-    }
-
-}
-
-stats.innerHTML =
-
-`
-<div class="stats-grid">
-
-    <div class="stat-box">
-
-        <div class="stat-value">
-
-            ${total}
-
-        </div>
-
-        <div class="stat-label">
-
-            Total Tokens
-
-        </div>
-
-    </div>
-
-    <div class="stat-box">
-
-        <div class="stat-value">
-
-            ${myTokenCount}
-
-        </div>
-
-        <div class="stat-label">
-
-            Your Tokens
-
-        </div>
-
-    </div>
-
-    <div class="stat-box">
-
-        <div class="stat-value">
-
-            EVOZ
-
-        </div>
-
-        <div class="stat-label">
-
-            Mainnet
-
-        </div>
-
-    </div>
-
-</div>
-`;
+        const myTokenElement =
+            document.getElementById(
+                "myTokensStat"
+            );
 
         if (myTokenElement) {
 
-    myTokenElement.innerText =
-        myTokenCount;
+            myTokenElement.innerText =
+                myTokenCount;
 
         }
-        
+
+    stats.innerHTML =
+
+        `
+        <div class="stats-grid">
+
+            <div class="stat-box">
+
+                <div class="stat-value">
+                    ${total}
+                </div>
+
+                <div class="stat-label">
+                    Total Tokens
+                </div>
+
+            </div>
+
+            <div class="stat-box">
+
+                <div class="stat-value">
+                    ${myTokenCount}
+                </div>
+
+                <div class="stat-label">
+                    Your Tokens
+                </div>
+
+            </div>
+
+            <div class="stat-box">
+
+                <div class="stat-value">
+                    EVOZ
+                </div>
+
+                <div class="stat-label">
+                    Mainnet
+                </div>
+
+            </div>
+
+        </div>
+        `;
+
         let html = "";
 
         const maxShow = 5;
@@ -548,9 +528,7 @@ stats.innerHTML =
         ) {
 
             const token =
-                await factory.getToken(
-                    i
-                );
+                await factory.getToken(i);
 
             const createdDate =
                 new Date(
@@ -573,28 +551,7 @@ stats.innerHTML =
                 </div>
 
                 <div class="token-address">
-
-                    ${token.token.substring(
-                        0,
-                        6
-                    )}
-                    ...
-                    ${token.token.substring(
-                        token.token.length - 4
-                    )}
-
-                </div>
-
-                <div class="token-actions">
-
-                    <a
-                        href="${CONFIG.EXPLORER_URL}/address/${token.token}"
-                        target="_blank">
-
-                        Explorer
-
-                    </a>
-
+                    ${token.token}
                 </div>
 
                 <details>
@@ -634,9 +591,7 @@ stats.innerHTML =
 
     } catch (error) {
 
-        console.error(
-            error
-        );
+        console.error(error);
 
     }
 
@@ -687,9 +642,7 @@ async function loadMyTokens() {
         ) {
 
             const token =
-                await factory.getToken(
-                    i
-                );
+                await factory.getToken(i);
 
             if (
 
@@ -705,13 +658,6 @@ async function loadMyTokens() {
 
             }
 
-            const createdDate =
-                new Date(
-                    Number(
-                        token.createdAt
-                    ) * 1000
-                ).toLocaleString();
-
             html +=
 
             `
@@ -726,55 +672,8 @@ async function loadMyTokens() {
                 </div>
 
                 <div class="token-address">
-
-                    ${token.token.substring(
-                        0,
-                        6
-                    )}
-                    ...
-                    ${token.token.substring(
-                        token.token.length - 4
-                    )}
-
+                    ${token.token}
                 </div>
-
-                <div class="token-actions">
-
-                    <a
-                        href="${CONFIG.EXPLORER_URL}/address/${token.token}"
-                        target="_blank">
-
-                        Explorer
-
-                    </a>
-
-                </div>
-
-                <details>
-
-                    <summary>
-                        Details
-                    </summary>
-
-                    <br>
-
-                    Supply:
-                    ${ethers.utils.formatUnits(
-                        token.supply,
-                        18
-                    )}
-
-                    <br><br>
-
-                    Created:
-                    ${createdDate}
-
-                    <br><br>
-
-                    Creator:
-                    ${token.creator}
-
-                </details>
 
             </div>
             `;
@@ -787,132 +686,9 @@ async function loadMyTokens() {
 
     } catch (error) {
 
-        console.error(
-            error
-        );
+        console.error(error);
 
     }
-
-}
-
-async function downloadVerificationPackage(
-    data
-) {
-
-    const zip =
-        new JSZip();
-
-    const verifyInfo =
-
-`TOKEN ADDRESS
-${data.tokenAddress}
-
-TX HASH
-${data.txHash}
-
-CREATOR
-${data.creator}
-
-NAME
-${data.name}
-
-SYMBOL
-${data.symbol}
-
-SUPPLY
-${data.supply}
-
-NETWORK
-${CONFIG.CHAIN_NAME}
-
-FACTORY
-${CONFIG.FACTORY_ADDRESS}
-
-RPC
-${CONFIG.RPC_URL}
-
-EXPLORER
-${CONFIG.EXPLORER_URL}
-`;
-
-    const compilerSettings = {
-
-        compilerVersion:
-            "0.8.24",
-
-        optimizer: {
-
-            enabled: true,
-
-            runs: 200
-
-        },
-
-        evmVersion:
-            "paris"
-
-    };
-
-    const constructorArguments =
-
-`name_ = ${data.name}
-
-symbol_ = ${data.symbol}
-
-supply_ = ${data.supply}
-
-creator_ = ${data.creator}
-`;
-
-    zip.file(
-        "verify-info.txt",
-        verifyInfo
-    );
-
-    zip.file(
-        "compiler-settings.json",
-        JSON.stringify(
-            compilerSettings,
-            null,
-            2
-        )
-    );
-
-    zip.file(
-        "constructor-arguments.txt",
-        constructorArguments
-    );
-
-    const blob =
-        await zip.generateAsync({
-
-            type:
-                "blob"
-
-        });
-
-    const link =
-        document.createElement(
-            "a"
-        );
-
-    link.href =
-        URL.createObjectURL(
-            blob
-        );
-
-    link.download =
-        `${data.symbol}-Verification.zip`;
-
-    document.body.appendChild(
-        link
-    );
-
-    link.click();
-
-    document.body.removeChild(
-        link
-    );
 
 }
 
