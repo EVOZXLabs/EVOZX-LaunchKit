@@ -434,3 +434,102 @@ footer {
 
     font-size: 13px;
 }
+
+/* DASHBOARD STATS */
+
+.stats-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(
+                150px,
+                1fr
+            )
+        );
+
+    gap: 15px;
+
+    margin-top: 10px;
+}
+
+.stat-box {
+
+    background: #0f172a;
+
+    border: 1px solid #334155;
+
+    border-radius: 12px;
+
+    padding: 20px;
+
+    text-align: center;
+
+    transition: 0.2s;
+}
+
+.stat-box:hover {
+
+    border-color: #38bdf8;
+
+    transform: translateY(-2px);
+}
+
+.stat-value {
+
+    font-size: 28px;
+
+    font-weight: bold;
+
+    color: #38bdf8;
+
+    margin-bottom: 8px;
+}
+
+.stat-label {
+
+    color: #94a3b8;
+
+    font-size: 14px;
+}
+
+/* LOGO */
+
+.main-logo {
+
+    width: 110px;
+
+    height: auto;
+
+    display: block;
+
+    margin: 0 auto 15px auto;
+}
+
+/* HEADER */
+
+header {
+
+    text-align: center;
+
+    margin-bottom: 25px;
+}
+
+header h1 {
+
+    margin-top: 5px;
+}
+
+/* CARD HOVER */
+
+.card {
+
+    transition: 0.2s;
+}
+
+.card:hover {
+
+    border-color: #38bdf8;
+}
