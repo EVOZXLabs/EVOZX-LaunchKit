@@ -11,11 +11,15 @@ function shortenAddress(address) {
     }
 
     return (
+
         address.substring(0, 6) +
+
         "..." +
+
         address.substring(
             address.length - 4
         )
+
     );
 
 }
@@ -25,7 +29,9 @@ async function connectWallet() {
     if (!window.ethereum) {
 
         alert(
-            "No EVM wallet detected.\n\nPlease use TokenPocket, OKX Wallet, Bitget Wallet, Rabby, or MetaMask."
+
+            "No EVM wallet detected.\n\nPlease use TokenPocket, MetaMask, OKX Wallet, Bitget Wallet, or Rabby Wallet."
+
         );
 
         return;
@@ -50,9 +56,7 @@ async function connectWallet() {
 
     } catch (error) {
 
-        console.error(
-            error
-        );
+        console.error(error);
 
         alert(
             "Failed to connect wallet."
@@ -65,7 +69,9 @@ async function connectWallet() {
 async function switchToEvoz() {
 
     const chainHex =
+
         "0x" +
+
         CONFIG.CHAIN_ID.toString(
             16
         );
@@ -144,9 +150,7 @@ async function switchToEvoz() {
 
             } catch (addError) {
 
-                console.error(
-                    addError
-                );
+                console.error(addError);
 
             }
 
@@ -158,9 +162,7 @@ async function switchToEvoz() {
 
 async function updateWalletInfo() {
 
-    if (
-        !window.ethereum
-    ) {
+    if (!window.ethereum) {
 
         return;
 
@@ -188,24 +190,18 @@ async function updateWalletInfo() {
         accounts.length === 0
     ) {
 
-        currentAccount =
-            null;
+        currentAccount = null;
 
-        window.currentAccount =
-            null;
+        window.currentAccount = null;
 
-        if (
-            connectBtn
-        ) {
+        if (connectBtn) {
 
             connectBtn.innerText =
                 "Connect Wallet";
 
         }
 
-        if (
-            networkDiv
-        ) {
+        if (networkDiv) {
 
             networkDiv.innerText =
                 "Wallet Not Connected";
@@ -225,11 +221,10 @@ async function updateWalletInfo() {
     signer =
         provider.getSigner();
 
-    if (
-        connectBtn
-    ) {
+    if (connectBtn) {
 
         connectBtn.innerText =
+
             shortenAddress(
                 currentAccount
             );
@@ -255,27 +250,27 @@ async function updateWalletInfo() {
 
     ) {
 
-        if (
-            networkDiv
-        ) {
+        if (networkDiv) {
 
             networkDiv.innerText =
+
                 "Connected to EVOZ Mainnet";
 
         }
 
     } else {
 
-        if (
-            networkDiv
-        ) {
+        if (networkDiv) {
 
             networkDiv.innerText =
+
                 "Unsupported Network";
 
         }
 
     }
+
+    /* LOAD FACTORY DATA */
 
     if (
 
@@ -299,6 +294,30 @@ async function updateWalletInfo() {
 
     }
 
+    /* LOAD EXCHANGE DATA */
+
+    if (
+
+        typeof loadExchangeInfo ===
+        "function"
+
+    ) {
+
+        await loadExchangeInfo();
+
+    }
+
+    if (
+
+        typeof loadExchangeStock ===
+        "function"
+
+    ) {
+
+        await loadExchangeStock();
+
+    }
+
 }
 
 async function checkConnection() {
@@ -309,22 +328,21 @@ async function checkConnection() {
 
     } catch (error) {
 
-        console.error(
-            error
-        );
+        console.error(error);
 
     }
 
 }
 
 window.addEventListener(
+
     "load",
+
     checkConnection
+
 );
 
-if (
-    window.ethereum
-) {
+if (window.ethereum) {
 
     window.ethereum.on(
 
