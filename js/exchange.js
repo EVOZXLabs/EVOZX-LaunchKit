@@ -51,9 +51,7 @@ try {
 
             <br><br>
 
-            ${CURRENT_RATE} EVOZ
-            =
-            1 EVOZX
+            ${CURRENT_RATE} EVOZ = 1 EVOZX
             `;
 
     }
@@ -105,17 +103,14 @@ const amount =
     ) || 0;
 
 const receive =
-    amount /
-    CURRENT_RATE;
+    amount / CURRENT_RATE;
 
 document.getElementById(
     "receiveAmount"
 ).innerHTML =
 
     "Receive: " +
-
     receive.toLocaleString() +
-
     " EVOZX";
 
 }
@@ -125,6 +120,16 @@ document.getElementById(
 async function addEVOZXToWallet() {
 
 try {
+
+    if (!window.ethereum) {
+
+        alert(
+            "Wallet not detected."
+        );
+
+        return;
+
+    }
 
     await window.ethereum.request({
 
@@ -249,35 +254,39 @@ try {
     ).innerHTML =
 
         `
-        ✅ Successfully Purchased
+        <div class="exchange-success">
 
-        <br><br>
+            ✅ Successfully Purchased
 
-        <strong>
+            <br><br>
 
-        ${received.toLocaleString()}
-        EVOZX
+            <strong>
+                ${received.toLocaleString()}
+                EVOZX
+            </strong>
 
-        </strong>
+            <br><br>
 
-        <br><br>
+            <button
+            class="add-wallet-btn"
+            onclick="addEVOZXToWallet()">
 
-        <button
-        onclick="addEVOZXToWallet()">
+                Add EVOZX To Wallet
 
-            Add EVOZX To Wallet
+            </button>
 
-        </button>
+            <br><br>
 
-        <br><br>
+            <a
+            class="explorer-btn"
+            href="${CONFIG.EXPLORER_URL}/tx/${tx.hash}"
+            target="_blank">
 
-        <a
-        href="${CONFIG.EXPLORER_URL}/tx/${tx.hash}"
-        target="_blank">
+                View Transaction
 
-            View Transaction
+            </a>
 
-        </a>
+        </div>
         `;
 
     document.getElementById(
