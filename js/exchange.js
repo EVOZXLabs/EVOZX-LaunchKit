@@ -1,32 +1,55 @@
-const EXCHANGE_ABI = [
+async function calculateEVOZX() {
 
-    "function buyEVOZX() payable",
+    try {
 
-    "function getAvailableStock() view returns(uint256)",
+        const amount =
+            parseFloat(
+                document
+                    .getElementById(
+                        "buyAmount"
+                    )
+                    .value || 0
+            );
 
-    "function rate() view returns(uint256)"
+        const provider =
+            new ethers.providers.JsonRpcProvider(
+                CONFIG.RPC_URL
+            );
 
-];
+        const exchange =
+            new ethers.Contract(
+                CONFIG.EXCHANGE_ADDRESS,
+                EXCHANGE_ABI,
+                provider
+            );
 
-function calculateEVOZX() {
+        const rate =
+            await exchange.rate();
 
-    const amount =
-        parseFloat(
-            document.getElementById(
-                "buyAmount"
-            ).value || 0
-        );
+        const receive =
+            amount /
+            Number(rate);
 
-    const receive =
-        amount / 5;
+        document.getElementById(
+            "receiveAmount"
+        ).innerHTML =
 
-    document.getElementById(
-        "receiveAmount"
-    ).innerHTML =
+        `
+        Receive:
+        ${receive.toLocaleString(
+            undefined,
+            {
+                maximumFractionDigits: 18
+            }
+        )}
+        EVOZX
+        `;
 
-        `Receive:
-        ${receive}
-        EVOZX`;
+    } catch (error) {
+
+        console.error(error);
+
+    }
 
 }
 
@@ -49,19 +72,78 @@ async function loadExchangeStock() {
         const stock =
             await exchange.getAvailableStock();
 
+        const formatted =
+            ethers.utils.formatEther(
+                stock
+            );
+
         document.getElementById(
             "exchangeStock"
         ).innerHTML =
 
-            `Available Stock:
-            ${Number(
-                ethers.utils.formatEther(
-                    stock
-                )
-            ).toLocaleString()}
-            EVOZX`;
+        `
+        Available Stock:
+        ${Number(
+            formatted
+        ).toLocaleString()}
+        EVOZX
+        `;
 
-    } catch(error) {
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "exchangeStock"
+        ).innerHTML =
+
+        `
+        Unable to load stock.
+        `;
+
+    }
+
+}
+
+async function loadExchangeInfo() {
+
+    try {
+
+        const provider =
+            new ethers.providers.JsonRpcProvider(
+                CONFIG.RPC_URL
+            );
+
+        const exchange =
+            new ethers.Contract(
+                CONFIG.EXCHANGE_ADDRESS,
+                EXCHANGE_ABI,
+                provider
+            );
+
+        const rate =
+            await exchange.rate();
+
+        const rateBox =
+            document.querySelector(
+                ".exchange-rate"
+            );
+
+        if (rateBox) {
+
+            rateBox.innerHTML =
+
+            `
+            <strong>
+            Current Rate
+            </strong>
+            <br><br>
+            ${rate} EVOZ = 1 EVOZX
+            `;
+
+        }
+
+    } catch (error) {
 
         console.error(error);
 
@@ -84,16 +166,16 @@ async function buyEVOZX() {
         }
 
         const amount =
-            document.getElementById(
-                "buyAmount"
-            ).value;
+            document
+                .getElementById(
+                    "buyAmount"
+                )
+                .value
+                .trim();
 
         if (
-
             !amount ||
-
             Number(amount) <= 0
-
         ) {
 
             alert(
@@ -103,15 +185,6 @@ async function buyEVOZX() {
             return;
 
         }
-
-        document.getElementById(
-            "exchangeStatus"
-        ).innerHTML =
-
-        `
-        <div class="loading"></div>
-        Waiting for wallet confirmation...
-        `;
 
         const provider =
             new ethers.providers.Web3Provider(
@@ -127,6 +200,32 @@ async function buyEVOZX() {
                 EXCHANGE_ABI,
                 signer
             );
+
+        const paused =
+            await exchange.paused();
+
+        if (paused) {
+
+            document.getElementById(
+                "exchangeStatus"
+            ).innerHTML =
+
+            `
+            ❌ Exchange is paused.
+            `;
+
+            return;
+
+        }
+
+        document.getElementById(
+            "exchangeStatus"
+        ).innerHTML =
+
+        `
+        <div class="loading"></div>
+        Waiting for wallet confirmation...
+        `;
 
         const tx =
             await exchange.buyEVOZX({
@@ -147,7 +246,8 @@ async function buyEVOZX() {
         Transaction submitted...
         `;
 
-        await tx.wait();
+        const receipt =
+            await tx.wait();
 
         document.getElementById(
             "exchangeStatus"
@@ -155,22 +255,62 @@ async function buyEVOZX() {
 
         `
         ✅ EVOZX purchased successfully.
+
+        <br><br>
+
+        <a
+        href="${CONFIG.EXPLORER_URL}/tx/${receipt.transactionHash}"
+        target="_blank">
+
+        View Transaction
+
+        </a>
         `;
+
+        document.getElementById(
+            "buyAmount"
+        ).value = "";
+
+        calculateEVOZX();
 
         await loadExchangeStock();
 
-    } catch(error) {
+    } catch (error) {
 
         console.error(error);
+
+        let message =
+            error.message;
+
+        if (
+            error.data &&
+            error.data.message
+        ) {
+
+            message =
+                error.data.message;
+
+        }
 
         document.getElementById(
             "exchangeStatus"
         ).innerHTML =
 
         `
-        ❌ ${error.message}
+        ❌ ${message}
         `;
 
     }
 
 }
+
+window.addEventListener(
+    "load",
+    async () => {
+
+        await loadExchangeInfo();
+
+        await loadExchangeStock();
+
+    }
+);
