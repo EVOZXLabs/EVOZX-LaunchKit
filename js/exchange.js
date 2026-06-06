@@ -1,3 +1,7 @@
+let CURRENT_RATE = CONFIG.EXCHANGE_RATE;
+
+/* LOAD EXCHANGE STOCK + RATE */
+
 async function loadExchangeStock() {
 
 try {
@@ -14,29 +18,70 @@ try {
             provider
         );
 
+    /* LOAD RATE */
+
+    try {
+
+        const rate =
+            await exchange.rate();
+
+        CURRENT_RATE =
+            Number(rate);
+
+    } catch (error) {
+
+        CURRENT_RATE =
+            CONFIG.EXCHANGE_RATE;
+
+    }
+
+    const rateElement =
+        document.getElementById(
+            "exchangeRate"
+        );
+
+    if (rateElement) {
+
+        rateElement.innerHTML =
+
+            `
+            <strong>
+                Current Rate
+            </strong>
+
+            <br><br>
+
+            ${CURRENT_RATE} EVOZ
+            =
+            1 EVOZX
+            `;
+
+    }
+
+    /* LOAD STOCK */
+
     const stock =
         await exchange.getAvailableStock();
+
+    const formattedStock =
+        Number(
+            ethers.utils.formatUnits(
+                stock,
+                18
+            )
+        ).toLocaleString();
 
     document.getElementById(
         "exchangeStock"
     ).innerHTML =
 
         "Available Stock: " +
-
-        Number(
-            ethers.utils.formatUnits(
-                stock,
-                18
-            )
-        ).toLocaleString() +
-
+        formattedStock +
         " EVOZX";
 
 } catch (error) {
 
-    console.error(
-        error
-    );
+    console.error(error);
 
     document.getElementById(
         "exchangeStock"
@@ -48,20 +93,20 @@ try {
 
 }
 
+/* CALCULATE RECEIVE */
+
 function calculateEVOZX() {
 
 const amount =
     parseFloat(
-
         document.getElementById(
             "buyAmount"
         ).value
-
     ) || 0;
 
 const receive =
     amount /
-    CONFIG.EXCHANGE_RATE;
+    CURRENT_RATE;
 
 document.getElementById(
     "receiveAmount"
@@ -74,6 +119,8 @@ document.getElementById(
     " EVOZX";
 
 }
+
+/* ADD EVOZX TO WALLET */
 
 async function addEVOZXToWallet() {
 
@@ -108,21 +155,19 @@ try {
 
 } catch (error) {
 
-    console.error(
-        error
-    );
+    console.error(error);
 
 }
 
 }
+
+/* BUY EVOZX */
 
 async function buyEVOZX() {
 
 try {
 
-    if (
-        !window.ethereum
-    ) {
+    if (!window.ethereum) {
 
         alert(
             "Wallet not detected."
@@ -197,16 +242,23 @@ try {
 
     const received =
         Number(amount) /
-        CONFIG.EXCHANGE_RATE;
+        CURRENT_RATE;
 
     document.getElementById(
         "exchangeStatus"
     ).innerHTML =
 
         `
-        ✅ Successfully purchased
+        ✅ Successfully Purchased
+
+        <br><br>
+
+        <strong>
+
         ${received.toLocaleString()}
         EVOZX
+
+        </strong>
 
         <br><br>
 
@@ -242,9 +294,7 @@ try {
 
 } catch (error) {
 
-    console.error(
-        error
-    );
+    console.error(error);
 
     document.getElementById(
         "exchangeStatus"
@@ -257,6 +307,8 @@ try {
 }
 
 }
+
+/* AUTO LOAD */
 
 window.addEventListener(
 
