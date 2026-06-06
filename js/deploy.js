@@ -36,6 +36,24 @@ try {
             .value
             .trim();
 
+    const website =
+    document
+        .getElementById("website")
+        .value
+        .trim();
+
+const telegram =
+    document
+        .getElementById("telegram")
+        .value
+        .trim();
+
+const twitter =
+    document
+        .getElementById("twitter")
+        .value
+        .trim();
+
     if (
         !name ||
         !symbol ||
@@ -146,21 +164,17 @@ try {
     `;
 
     const verificationData = {
+    tokenAddress,
+    txHash: receipt.transactionHash,
+    creator,
+    name,
+    symbol,
+    supply,
 
-        tokenAddress,
-
-        txHash:
-            receipt.transactionHash,
-
-        creator,
-
-        name,
-
-        symbol,
-
-        supply
-
-    };
+    website,
+    telegram,
+    twitter
+};
 
     document.getElementById(
 "tokenResult"
@@ -177,6 +191,34 @@ try {
 <div class="token-name">
 
     ${name}
+
+</div>
+
+<div class="token-links">
+
+    ${website ? `
+        <div>
+            <a href="${website}" target="_blank">
+                🌐 Website
+            </a>
+        </div>
+    ` : ""}
+
+    ${telegram ? `
+        <div>
+            <a href="${telegram}" target="_blank">
+                📢 Telegram
+            </a>
+        </div>
+    ` : ""}
+
+    ${twitter ? `
+        <div>
+            <a href="${twitter}" target="_blank">
+                🐦 X / Twitter
+            </a>
+        </div>
+    ` : ""}
 
 </div>
 
