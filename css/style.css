@@ -904,3 +904,25 @@ body {
     text-decoration: none;
 
 }
+
+/* EVOZ MAINNET HEADER */
+
+.exchange-header {
+
+    text-align: center;
+
+    margin-bottom: 20px;
+
+}
+
+.exchange-logo {
+
+    width: 100%;
+
+    max-width: 420px;
+
+    display: block;
+
+    margin: auto;
+
+}
