@@ -348,6 +348,24 @@ a:hover {
     word-break: break-all;
 }
 
+.token-links {
+    margin: 12px 0;
+}
+
+.token-links div {
+    margin: 6px 0;
+}
+
+.token-links a {
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.token-links a:hover {
+    color: #ffffff;
+}
+
 .token-actions {
 
     margin-bottom: 10px;
