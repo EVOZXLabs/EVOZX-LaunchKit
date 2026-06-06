@@ -1,332 +1,361 @@
+/* =========================================
+   EVOZX EXCHANGE
+========================================= */
+
 let CURRENT_RATE = CONFIG.EXCHANGE_RATE;
 
-/* LOAD EXCHANGE STOCK + RATE */
+/* =========================================
+   LOAD STOCK + RATE
+========================================= */
 
 async function loadExchangeStock() {
 
-try {
-
-    const provider =
-        new ethers.providers.JsonRpcProvider(
-            CONFIG.RPC_URL
-        );
-
-    const exchange =
-        new ethers.Contract(
-            CONFIG.EXCHANGE_ADDRESS,
-            EXCHANGE_ABI,
-            provider
-        );
-
-    /* LOAD RATE */
-
     try {
 
-        const rate =
-            await exchange.rate();
+        const provider =
+            new ethers.providers.JsonRpcProvider(
+                CONFIG.RPC_URL
+            );
 
-        CURRENT_RATE =
-            Number(rate);
+        const exchange =
+            new ethers.Contract(
+                CONFIG.EXCHANGE_ADDRESS,
+                EXCHANGE_ABI,
+                provider
+            );
 
-    } catch (error) {
+        /* LOAD RATE */
 
-        CURRENT_RATE =
-            CONFIG.EXCHANGE_RATE;
+        try {
 
-    }
+            const rate =
+                await exchange.rate();
 
-    const rateElement =
-        document.getElementById(
-            "exchangeRate"
-        );
+            CURRENT_RATE =
+                Number(rate);
 
-    if (rateElement) {
+        } catch {
 
-        rateElement.innerHTML =
-
-            `
-            <strong>
-                Current Rate
-            </strong>
-
-            <br><br>
-
-            ${CURRENT_RATE} EVOZ = 1 EVOZX
-            `;
-
-    }
-
-    /* LOAD STOCK */
-
-    const stock =
-        await exchange.getAvailableStock();
-
-    const formattedStock =
-        Number(
-            ethers.utils.formatUnits(
-                stock,
-                18
-            )
-        ).toLocaleString();
-
-    document.getElementById(
-        "exchangeStock"
-    ).innerHTML =
-
-        "Available Stock: " +
-        formattedStock +
-        " EVOZX";
-
-} catch (error) {
-
-    console.error(error);
-
-    document.getElementById(
-        "exchangeStock"
-    ).innerHTML =
-
-        "Available Stock: Error";
-
-}
-
-}
-
-/* CALCULATE RECEIVE */
-
-function calculateEVOZX() {
-
-const amount =
-    parseFloat(
-        document.getElementById(
-            "buyAmount"
-        ).value
-    ) || 0;
-
-const receive =
-    amount / CURRENT_RATE;
-
-document.getElementById(
-    "receiveAmount"
-).innerHTML =
-
-    "Receive: " +
-    receive.toLocaleString() +
-    " EVOZX";
-
-}
-
-/* ADD EVOZX TO WALLET */
-
-async function addEVOZXToWallet() {
-
-try {
-
-    if (!window.ethereum) {
-
-        alert(
-            "Wallet not detected."
-        );
-
-        return;
-
-    }
-
-    await window.ethereum.request({
-
-        method:
-            "wallet_watchAsset",
-
-        params: {
-
-            type:
-                "ERC20",
-
-            options: {
-
-                address:
-                    CONFIG.EVOZX_ADDRESS,
-
-                symbol:
-                    "EVOZX",
-
-                decimals:
-                    18
-
-            }
+            CURRENT_RATE =
+                CONFIG.EXCHANGE_RATE;
 
         }
 
-    });
+        const rateElement =
+            document.getElementById(
+                "exchangeRate"
+            );
 
-} catch (error) {
+        if (rateElement) {
 
-    console.error(error);
+            rateElement.innerHTML =
 
-}
+                `
+                <strong>
+                    Current Rate
+                </strong>
 
-}
+                <br><br>
 
-/* BUY EVOZX */
+                ${CURRENT_RATE} EVOZ = 1 EVOZX
+                `;
+        }
 
-async function buyEVOZX() {
+        /* LOAD STOCK */
 
-try {
+        const stock =
+            await exchange.getAvailableStock();
 
-    if (!window.ethereum) {
+        const formattedStock =
+            Number(
+                ethers.utils.formatUnits(
+                    stock,
+                    18
+                )
+            ).toLocaleString();
 
-        alert(
-            "Wallet not detected."
-        );
+        const stockElement =
+            document.getElementById(
+                "exchangeStock"
+            );
 
-        return;
+        if (stockElement) {
+
+            stockElement.innerHTML =
+
+                `
+                ${formattedStock}
+                EVOZX Available
+                `;
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "exchangeStock"
+        ).innerHTML =
+
+            "Stock Unavailable";
 
     }
+
+}
+
+/* =========================================
+   CALCULATE RECEIVE
+========================================= */
+
+function calculateEVOZX() {
 
     const amount =
-        document.getElementById(
-            "buyAmount"
-        ).value;
+        parseFloat(
+            document.getElementById(
+                "buyAmount"
+            ).value
+        ) || 0;
 
-    if (
-        !amount ||
-        Number(amount) <= 0
-    ) {
-
-        alert(
-            "Enter EVOZ amount."
-        );
-
-        return;
-
-    }
-
-    document.getElementById(
-        "exchangeStatus"
-    ).innerHTML =
-
-        `
-        <div class="loading"></div>
-        Waiting for wallet confirmation...
-        `;
-
-    const provider =
-        new ethers.providers.Web3Provider(
-            window.ethereum
-        );
-
-    const signer =
-        provider.getSigner();
-
-    const exchange =
-        new ethers.Contract(
-            CONFIG.EXCHANGE_ADDRESS,
-            EXCHANGE_ABI,
-            signer
-        );
-
-    const tx =
-        await exchange.buyEVOZX({
-
-            value:
-                ethers.utils.parseEther(
-                    amount
-                )
-
-        });
-
-    document.getElementById(
-        "exchangeStatus"
-    ).innerHTML =
-
-        `
-        <div class="loading"></div>
-        Processing transaction...
-        `;
-
-    await tx.wait();
-
-    const received =
-        Number(amount) /
-        CURRENT_RATE;
-
-    document.getElementById(
-        "exchangeStatus"
-    ).innerHTML =
-
-        `
-        <div class="exchange-success">
-
-            ✅ Successfully Purchased
-
-            <br><br>
-
-            <strong>
-                ${received.toLocaleString()}
-                EVOZX
-            </strong>
-
-            <br><br>
-
-            <button
-            class="add-wallet-btn"
-            onclick="addEVOZXToWallet()">
-
-                Add EVOZX To Wallet
-
-            </button>
-
-            <br><br>
-
-            <a
-            class="explorer-btn"
-            href="${CONFIG.EXPLORER_URL}/tx/${tx.hash}"
-            target="_blank">
-
-                View Transaction
-
-            </a>
-
-        </div>
-        `;
-
-    document.getElementById(
-        "buyAmount"
-    ).value = "";
+    const receive =
+        amount / CURRENT_RATE;
 
     document.getElementById(
         "receiveAmount"
     ).innerHTML =
 
-        "Receive: 0 EVOZX";
-
-    await loadExchangeStock();
-
-} catch (error) {
-
-    console.error(error);
-
-    document.getElementById(
-        "exchangeStatus"
-    ).innerHTML =
-
         `
-        ❌ ${error.message}
+        Receive:
+        ${receive.toLocaleString()}
+        EVOZX
         `;
 
 }
 
+/* =========================================
+   ADD TOKEN TO WALLET
+========================================= */
+
+async function addEVOZXToWallet() {
+
+    try {
+
+        if (!window.ethereum) {
+
+            alert(
+                "Wallet not detected."
+            );
+
+            return;
+        }
+
+        await window.ethereum.request({
+
+            method:
+                "wallet_watchAsset",
+
+            params: {
+
+                type:
+                    "ERC20",
+
+                options: {
+
+                    address:
+                        CONFIG.EVOZX_ADDRESS,
+
+                    symbol:
+                        "EVOZX",
+
+                    decimals:
+                        18
+
+                }
+
+            }
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
 }
 
-/* AUTO LOAD */
+/* =========================================
+   BUY EVOZX
+========================================= */
+
+async function buyEVOZX() {
+
+    try {
+
+        if (!window.ethereum) {
+
+            alert(
+                "Wallet not detected."
+            );
+
+            return;
+
+        }
+
+        const amount =
+            document.getElementById(
+                "buyAmount"
+            ).value;
+
+        if (
+            !amount ||
+            Number(amount) <= 0
+        ) {
+
+            alert(
+                "Enter EVOZ amount."
+            );
+
+            return;
+
+        }
+
+        document.getElementById(
+            "exchangeStatus"
+        ).innerHTML =
+
+            `
+            <div class="loading"></div>
+            Waiting for wallet confirmation...
+            `;
+
+        const provider =
+            new ethers.providers.Web3Provider(
+                window.ethereum
+            );
+
+        const signer =
+            provider.getSigner();
+
+        const exchange =
+            new ethers.Contract(
+                CONFIG.EXCHANGE_ADDRESS,
+                EXCHANGE_ABI,
+                signer
+            );
+
+        const tx =
+            await exchange.buyEVOZX({
+
+                value:
+                    ethers.utils.parseEther(
+                        amount
+                    )
+
+            });
+
+        document.getElementById(
+            "exchangeStatus"
+        ).innerHTML =
+
+            `
+            <div class="loading"></div>
+            Processing transaction...
+            `;
+
+        await tx.wait();
+
+        const received =
+            Number(amount) /
+            CURRENT_RATE;
+
+        document.getElementById(
+            "exchangeStatus"
+        ).innerHTML =
+
+            `
+            <div class="exchange-success">
+
+                <strong>
+                    ✅ Purchase Successful
+                </strong>
+
+                <br><br>
+
+                Received
+
+                <br>
+
+                <strong>
+                    ${received.toLocaleString()}
+                    EVOZX
+                </strong>
+
+                <br><br>
+
+                <button
+                class="add-wallet-btn"
+                onclick="addEVOZXToWallet()">
+
+                    Add EVOZX To Wallet
+
+                </button>
+
+                <br><br>
+
+                <a
+                class="explorer-btn"
+                href="${CONFIG.EXPLORER_URL}/tx/${tx.hash}"
+                target="_blank">
+
+                    View Transaction
+
+                </a>
+
+            </div>
+            `;
+
+        document.getElementById(
+            "buyAmount"
+        ).value = "";
+
+        document.getElementById(
+            "receiveAmount"
+        ).innerHTML =
+
+            "Receive: 0 EVOZX";
+
+        await loadExchangeStock();
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "exchangeStatus"
+        ).innerHTML =
+
+            `
+            ❌ Transaction Failed
+            <br><br>
+            ${error.message}
+            `;
+
+    }
+
+}
+
+/* =========================================
+   AUTO LOAD
+========================================= */
 
 window.addEventListener(
 
-"load",
+    "load",
 
-async () => {
+    async () => {
 
-    await loadExchangeStock();
+        await loadExchangeStock();
 
-}
+    }
 
 );
