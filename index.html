@@ -37,7 +37,7 @@
         <img
             src="img/evoz-banner.png"
             class="hero-banner"
-            alt="EVOZ Banner">
+            alt="EVOZX Banner">
 
         <h1>
             EVOZX Launch Kit
@@ -163,7 +163,7 @@
 
     </section>
 
-    <!-- DEPLOY -->
+    <!-- DEPLOY TOKEN -->
 
     <section class="card">
 
@@ -184,64 +184,81 @@
         </div>
 
     </section>
-    
-<!-- BUY EVOZX -->
 
-<section class="card">
+    <!-- BUY EVOZX -->
 
-    <h2>
-        💎 Buy EVOZX
-    </h2>
+    <section class="card">
 
-    <p style="color:#94a3b8;margin-bottom:15px;">
+        <h2>
+            💎 Buy EVOZX
+        </h2>
 
-        Get EVOZX instantly using EVOZ Mainnet.
+        <p
+        style="
+        color:#94a3b8;
+        margin-bottom:15px;">
 
-    </p>
+            Get EVOZX instantly using EVOZ Mainnet.
 
-    <div class="exchange-rate">
+        </p>
 
-        5 EVOZ = 1 EVOZX
+        <div class="exchange-rate">
 
-    </div>
+            <strong>
 
-    <br>
+                Current Rate
 
-    <input
-        type="number"
-        id="buyAmount"
-        placeholder="Enter EVOZ amount"
-        oninput="calculateEVOZX()">
+            </strong>
 
-    <div id="receiveAmount">
+            <br><br>
 
-        Receive: 0 EVOZX
+            5 EVOZ = 1 EVOZX
 
-    </div>
+        </div>
 
-    <div id="exchangeStock">
+        <br>
 
-        Available Stock: Loading...
+        <input
+            type="number"
+            id="buyAmount"
+            placeholder="Enter EVOZ amount"
+            oninput="calculateEVOZX()">
 
-    </div>
+        <div
+            id="receiveAmount"
+            class="receive-box">
 
-    <button
-        id="buyBtn"
-        onclick="buyEVOZX()">
+            Receive: 0 EVOZX
 
-        💎 Buy EVOZX
+        </div>
 
-    </button>
+        <div
+            id="exchangeStock"
+            class="stock-box">
 
-    <div id="exchangeStatus">
+            Available Stock: Loading...
 
-        Ready
+        </div>
 
-    </div>
+        <br>
 
-</section>
-    
-    <!-- RESULT -->
+        <button
+            id="buyBtn"
+            onclick="buyEVOZX()">
+
+            💎 Buy EVOZX
+
+        </button>
+
+        <div id="exchangeStatus">
+
+            Ready
+
+        </div>
+
+    </section>
+
+    <!-- DEPLOYMENT RESULT -->
 
     <section class="card">
 
@@ -257,7 +274,7 @@
 
     </section>
 
-    <!-- FACTORY TOKENS -->
+    <!-- MY TOKENS -->
 
     <section class="card">
 
@@ -289,7 +306,7 @@
 
     </section>
 
-    <!-- FACTORY STATISTICS -->
+    <!-- FACTORY STATS -->
 
     <section class="card">
 
@@ -327,9 +344,16 @@
 
 </div>
 
+<!-- SCRIPTS -->
+
 <script src="js/config.js"></script>
+
 <script src="js/wallet.js"></script>
+
 <script src="js/deploy.js"></script>
+
+<script src="js/exchange.js"></script>
+
 <script src="js/app.js"></script>
 
 </body>
