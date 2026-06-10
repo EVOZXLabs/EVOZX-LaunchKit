@@ -124,7 +124,7 @@ https://github.com/EVOZXLabs/EVOZX-LaunchKit/releases
 
 ---
 
-🛣 Roadmap
+🛣 Roadmap🌐
 
 V1 Stable
 
